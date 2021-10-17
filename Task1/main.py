@@ -5,6 +5,7 @@ from typing import List
 
 from module.algorithm_type_resolver import resolve_classifier_type, resolve_detector_type
 from module.classifier import classify
+from module.plot import draw_plots
 
 """
     How to run:
@@ -21,10 +22,12 @@ def main() -> None:
     args = prepare_args()
     chosen_classifier = args.classifier
     chosen_detector = args.detector
+    save_charts = args.save
 
     detector = resolve_detector_type(DETECTOR_NAMES, chosen_detector)
     classifier = resolve_classifier_type(CLASSIFIER_NAMES, chosen_classifier)
     classify(detector, classifier)
+    # draw_plots()
 
     display_finish()
 
@@ -40,6 +43,9 @@ def prepare_args() -> Namespace:
     arg_parser.add_argument(
         "-c", "--classifier", required=True, type=str, choices=CLASSIFIER_NAMES,
         help="Name of classifier"
+    )
+    arg_parser.add_argument(
+        "-s", "--save", default=False, action="store_true", help="Save charts to files"
     )
 
     return arg_parser.parse_args()

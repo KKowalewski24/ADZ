@@ -7,6 +7,7 @@ from skmultiflow.trees import HoeffdingTreeClassifier
 
 
 def resolve_detector_type(detector_names: List[str], chosen_detector: str) -> BaseDriftDetector:
+    # TODO Consider setting different params
     if detector_names[0] == chosen_detector:
         return DDM()
     elif detector_names[1] == chosen_detector:
