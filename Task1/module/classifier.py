@@ -1,10 +1,37 @@
-from typing import Union
+from typing import List, Tuple, Union
 
+from skmultiflow.data import FileStream
 from skmultiflow.drift_detection.base_drift_detector import BaseDriftDetector
 from skmultiflow.lazy import KNNClassifier
 from skmultiflow.trees import HoeffdingTreeClassifier
 
 
 def classify(detector: BaseDriftDetector,
-             classifier: Union[KNNClassifier, HoeffdingTreeClassifier]) -> None:
-    pass
+             classifier: Union[KNNClassifier, HoeffdingTreeClassifier],
+             dataset: FileStream, train_size: int
+             ) -> Tuple[List[int], List[int], List[float], List[int]]:
+    changes: List[int] = []
+    warnings: List[int] = []
+    accuracy_trend: List[float] = []
+    correct_predictions: int = 0
+
+    for i in range(1, train_size + 1):
+        X, y = dataset.next_sample()
+        pred = classifier.predict(X)
+
+        if pred == y:
+            detector.add_element(0)
+            correct_predictions += 1
+        else:
+            detector.add_element(1)
+
+        if detector.detected_change():
+            changes.append(i)
+
+        if detector.detected_warning_zone():
+            warnings.append(i)
+
+        classifier.partial_fit(X, y)
+        accuracy_trend.append(correct_predictions / (i * 100))
+
+    return changes, warnings, accuracy_trend, list(range(train_size))

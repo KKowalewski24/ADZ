@@ -8,10 +8,11 @@ from module.utils import create_directory, prepare_filename
 RESULTS_DIR = "results/"
 
 
-def draw_plots(training_size_range: List[int], accuracy_trend: List[float], warnings: [],
-               changes: [], detector_name: str, classifier_name: str, save_charts: bool) -> None:
+def draw_plots(changes: List[int], warnings: List[int], accuracy_trend: List[float],
+               train_size_range: List[int], detector_name: str, classifier_name: str,
+               save_charts: bool) -> None:
     create_directory(RESULTS_DIR)
-    seaborn.lineplot(x=training_size_range, y=accuracy_trend, alpha=0.4, color="green")
+    seaborn.lineplot(x=train_size_range, y=accuracy_trend, alpha=0.4, color="green")
 
     for change in changes:
         plt.axvline(change, alpha=0.3, color="red")

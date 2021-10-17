@@ -3,6 +3,8 @@ import sys
 from argparse import ArgumentParser, Namespace
 from typing import List
 
+from skmultiflow.data import FileStream
+
 from module.algorithm_type_resolver import resolve_classifier_type, resolve_detector_type
 from module.classifier import classify
 from module.plot import draw_plots
@@ -15,6 +17,8 @@ from module.plot import draw_plots
 # VAR ------------------------------------------------------------------------ #
 DETECTOR_NAMES: List[str] = ["ddm", "eddm", "adwin", "kswin", "ph"]
 CLASSIFIER_NAMES: List[str] = ["knn", "vfdt"]
+DATASET_PATH: str = ""
+TRAIN_SIZE: int = 2000
 
 
 # MAIN ----------------------------------------------------------------------- #
@@ -24,10 +28,16 @@ def main() -> None:
     chosen_detector = args.detector
     save_charts = args.save
 
+    dataset: FileStream = FileStream(DATASET_PATH)
     detector = resolve_detector_type(DETECTOR_NAMES, chosen_detector)
     classifier = resolve_classifier_type(CLASSIFIER_NAMES, chosen_classifier)
-    classify(detector, classifier)
-    # draw_plots()
+    changes, warnings, accuracy_trend, train_size_range = classify(
+        detector, classifier, dataset, TRAIN_SIZE
+    )
+    draw_plots(
+        changes, warnings, accuracy_trend, train_size_range,
+        chosen_detector, chosen_classifier, save_charts
+    )
 
     display_finish()
 
