@@ -7,26 +7,38 @@ from skmultiflow.data import FileStream
 
 from module.algorithm_type_resolver import resolve_classifier_type, resolve_detector_type
 from module.classifier import classify
+from module.data_generator import generate_data
 from module.plot import draw_plots
+from module.utils import create_directory
 
 """
     How to run:
-        python main.py -d ddm -c knn -s
+        Generating dataset: python main.py -ds
+        Running detection:  python main.py -d ddm -c knn -s
 """
 
 # VAR ------------------------------------------------------------------------ #
+DATASET_DIR: str = "data/"
+DATASET_PATH: str = DATASET_DIR + "data.csv"
+DATASET_ROWS_NUMBER: int = 20000
+
 DETECTOR_NAMES: List[str] = ["ddm", "eddm", "adwin", "kswin", "ph"]
 CLASSIFIER_NAMES: List[str] = ["knn", "vfdt"]
-DATASET_PATH: str = ""
-TRAIN_SIZE: int = 2000
+TRAIN_SIZE: int = 5000
 
 
 # MAIN ----------------------------------------------------------------------- #
 def main() -> None:
     args = prepare_args()
+    generate_dataset = args.dataset
     chosen_classifier = args.classifier
     chosen_detector = args.detector
     save_charts = args.save
+    create_directory(DATASET_DIR)
+
+    if generate_dataset:
+        generate_data(DATASET_PATH, DATASET_ROWS_NUMBER)
+        return
 
     dataset: FileStream = FileStream(DATASET_PATH)
     detector = resolve_detector_type(DETECTOR_NAMES, chosen_detector)
@@ -47,11 +59,14 @@ def prepare_args() -> Namespace:
     arg_parser = ArgumentParser()
 
     arg_parser.add_argument(
-        "-d", "--detector", required=True, type=str, choices=DETECTOR_NAMES,
+        "-ds", "--dataset", default=False, action="store_true", help="Generate dataset"
+    )
+    arg_parser.add_argument(
+        "-d", "--detector", type=str, choices=DETECTOR_NAMES,
         help="Name of detector"
     )
     arg_parser.add_argument(
-        "-c", "--classifier", required=True, type=str, choices=CLASSIFIER_NAMES,
+        "-c", "--classifier", type=str, choices=CLASSIFIER_NAMES,
         help="Name of classifier"
     )
     arg_parser.add_argument(
