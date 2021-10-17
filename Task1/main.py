@@ -9,11 +9,11 @@ from module.plot import draw_plots
 
 """
     How to run:
-        python main.py -d ddm -c knn 
+        python main.py -d ddm -c knn -s
 """
 
 # VAR ------------------------------------------------------------------------ #
-DETECTOR_NAMES: List[str] = ["ddm", "eddm", "adwin", "kswin"]
+DETECTOR_NAMES: List[str] = ["ddm", "eddm", "adwin", "kswin", "ph"]
 CLASSIFIER_NAMES: List[str] = ["knn", "vfdt"]
 
 

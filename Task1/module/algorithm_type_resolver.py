@@ -1,6 +1,6 @@
 from typing import List, Union
 
-from skmultiflow.drift_detection import ADWIN, DDM, EDDM, KSWIN
+from skmultiflow.drift_detection import ADWIN, DDM, EDDM, KSWIN, PageHinkley
 from skmultiflow.drift_detection.base_drift_detector import BaseDriftDetector
 from skmultiflow.lazy import KNNClassifier
 from skmultiflow.trees import HoeffdingTreeClassifier
@@ -16,6 +16,8 @@ def resolve_detector_type(detector_names: List[str], chosen_detector: str) -> Ba
         return ADWIN()
     elif detector_names[3] == chosen_detector:
         return KSWIN()
+    elif detector_names[4] == chosen_detector:
+        return PageHinkley()
 
 
 def resolve_classifier_type(classifier_names: List[str],
