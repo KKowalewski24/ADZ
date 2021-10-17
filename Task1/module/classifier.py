@@ -4,6 +4,7 @@ from skmultiflow.data import FileStream
 from skmultiflow.drift_detection.base_drift_detector import BaseDriftDetector
 from skmultiflow.lazy import KNNClassifier
 from skmultiflow.trees import HoeffdingTreeClassifier
+from tqdm import tqdm
 
 
 def classify(detector: BaseDriftDetector,
@@ -15,7 +16,7 @@ def classify(detector: BaseDriftDetector,
     accuracy_trend: List[float] = []
     correct_predictions: int = 0
 
-    for i in range(1, train_size + 1):
+    for i in tqdm(range(1, train_size + 1)):
         X, y = dataset.next_sample()
         pred = classifier.predict(X)
 

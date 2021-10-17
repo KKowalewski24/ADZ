@@ -12,13 +12,14 @@ def draw_plots(changes: List[int], warnings: List[int], accuracy_trend: List[flo
                train_size_range: List[int], detector_name: str, classifier_name: str,
                save_charts: bool) -> None:
     create_directory(RESULTS_DIR)
-    seaborn.lineplot(x=train_size_range, y=accuracy_trend, alpha=0.4, color="green")
 
     for change in changes:
         plt.axvline(change, alpha=0.3, color="red")
 
     for warning in warnings:
         plt.axvline(warning, alpha=0.3, color="yellow")
+
+    seaborn.lineplot(x=train_size_range, y=accuracy_trend, alpha=0.4, color="black")
 
     plt.title(f"{detector_name}_{classifier_name}")
     plt.xlabel("TODO!!!")

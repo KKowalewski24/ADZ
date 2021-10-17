@@ -1,3 +1,4 @@
+tqdm
 seaborn
 matplotlib
 pandas
