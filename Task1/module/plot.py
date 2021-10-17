@@ -26,4 +26,5 @@ def draw_plots(changes: List[int], warnings: List[int], accuracy_trend: List[flo
     plt.ylabel("TODO!!!")
     if save_charts:
         plt.savefig(RESULTS_DIR + prepare_filename(f"{detector_name}_{classifier_name}"))
+        plt.close()
     plt.show()
