@@ -32,7 +32,7 @@ def main() -> None:
     create_directory(RESULTS_DIR)
 
     clusterizer = resolve_clusterizer_type(CLUSTERIZER_NAMES, chosen_clusterizer_name)
-    db_scan, lof = prepare_benchmark_algorithms()
+    benchmark_algorithms, benchmark_algorithms_names = prepare_benchmark_algorithms()
     datasets: Dict[str, pd.DataFrame] = {
         "dataset_1": read_dataset_1(),
         "dataset_2": read_dataset_2(),
@@ -40,20 +40,18 @@ def main() -> None:
     }
 
     for dataset in datasets:
-        clusterizer_statistics, db_scan_statistics, lof_statistics = clusterize(
-            datasets[dataset], clusterizer, db_scan, lof
-        )
+        statistics_list = clusterize(datasets[dataset], clusterizer, benchmark_algorithms)
         if save_stats:
-            data: List[List[Union[str, float]]] = [
-                convert_statistics(clusterizer_statistics, chosen_clusterizer_name),
-                convert_statistics(db_scan_statistics, "db_scan"),
-                convert_statistics(lof_statistics, "lof"),
+            benchmark_stats = [
+                convert_statistics(statistics_list[i], benchmark_algorithms_names[i - 1])
+                for i in range(1, len(statistics_list))
             ]
 
             latex_generator.generate_vertical_table(
                 ["Classifier", "Silhouette", "Calinski_Harabasz",
                  "Davies_Bouldin", "Rand_score", "Fowlkes_Mallows"],
-                data, dataset + "_metrics"
+                [convert_statistics(statistics_list[0], chosen_clusterizer_name)] + benchmark_stats,
+                dataset + "_metrics"
             )
 
     display_finish()
