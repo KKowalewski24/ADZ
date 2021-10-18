@@ -4,12 +4,13 @@ from argparse import ArgumentParser, Namespace
 from typing import Dict, List, Union
 
 import pandas as pd
+from matplotlib import pyplot as plt
 
 from module.LatexGenerator import LatexGenerator
 from module.algorithm_type_resolver import prepare_benchmark_algorithms, resolve_clusterizer_type
 from module.analysis import clusterize
 from module.reader import read_dataset_1, read_dataset_2, read_dataset_3
-from module.utils import create_directory
+from module.utils import create_directory, prepare_filename
 
 """
     How to run:
@@ -68,6 +69,18 @@ def convert_statistics(statistics: Dict[str, float], algorithm_name: str) -> Lis
         statistics["rand_score"],
         statistics["fowlkes_mallows"]
     ]
+
+
+def draw_plots(clusterizer_name: str, save_charts: bool, results_dir: str) -> None:
+    # TODO
+    plt.title("TODO!!!")
+    plt.xlabel("TODO!!!")
+    plt.ylabel("TODO!!!")
+
+    if save_charts:
+        plt.savefig(results_dir + prepare_filename(f"{clusterizer_name}"))
+        plt.close()
+    plt.show()
 
 
 def prepare_args() -> Namespace:
