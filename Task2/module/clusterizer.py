@@ -1,2 +1,0 @@
-def clusterize() -> None:
-    pass

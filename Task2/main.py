@@ -1,32 +1,75 @@
 import subprocess
 import sys
 from argparse import ArgumentParser, Namespace
-from typing import List
+from typing import Dict, List, Union
 
+import pandas as pd
+
+from module.LatexGenerator import LatexGenerator
 from module.algorithm_type_resolver import prepare_benchmark_algorithms, resolve_clusterizer_type
+from module.analysis import clusterize
+from module.reader import read_dataset_1, read_dataset_2, read_dataset_3
+from module.utils import create_directory
 
 """
     How to run:
-        python main.py -s -c 
+        python main.py -s -c kmeans
 """
 
 # VAR ------------------------------------------------------------------------ #
+RESULTS_DIR = "results/"
 CLUSTERIZER_NAMES: List[str] = ["kmeans", "agglomerative"]
+
+latex_generator: LatexGenerator = LatexGenerator(RESULTS_DIR)
 
 
 # MAIN ----------------------------------------------------------------------- #
 def main() -> None:
     args = prepare_args()
     chosen_clusterizer_name = args.clusterizer
-    save_charts = args.save
+    save_stats = args.save
+    create_directory(RESULTS_DIR)
 
     clusterizer = resolve_clusterizer_type(CLUSTERIZER_NAMES, chosen_clusterizer_name)
     db_scan, lof = prepare_benchmark_algorithms()
+    datasets: Dict[str, pd.DataFrame] = {
+        "dataset_1": read_dataset_1(),
+        "dataset_2": read_dataset_2(),
+        "dataset_3": read_dataset_3(),
+    }
+
+    for dataset in datasets:
+        clusterizer_statistics, db_scan_statistics, lof_statistics = clusterize(
+            datasets[dataset], clusterizer, db_scan, lof
+        )
+        if save_stats:
+            data: List[List[Union[str, float]]] = [
+                convert_statistics(clusterizer_statistics, chosen_clusterizer_name),
+                convert_statistics(db_scan_statistics, "db_scan"),
+                convert_statistics(lof_statistics, "lof"),
+            ]
+
+            latex_generator.generate_vertical_table(
+                ["Classifier", "Silhouette", "Calinski_Harabasz",
+                 "Davies_Bouldin", "Rand_score", "Fowlkes_Mallows"],
+                data, dataset + "_metrics"
+            )
 
     display_finish()
 
 
 # DEF ------------------------------------------------------------------------ #
+def convert_statistics(statistics: Dict[str, float], algorithm_name: str) -> List[Union[str, float]]:
+    return [
+        algorithm_name,
+        statistics["silhouette"],
+        statistics["calinski_harabasz"],
+        statistics["davies_bouldin"],
+        statistics["rand_score"],
+        statistics["fowlkes_mallows"]
+    ]
+
+
 def prepare_args() -> Namespace:
     arg_parser = ArgumentParser()
 
