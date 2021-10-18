@@ -3,20 +3,25 @@ import sys
 from argparse import ArgumentParser, Namespace
 from typing import List
 
+from module.algorithm_type_resolver import prepare_benchmark_algorithms, resolve_clusterizer_type
+
 """
     How to run:
         python main.py -s -c 
 """
 
 # VAR ------------------------------------------------------------------------ #
-CLUSTERIZER_NAMES: List[str] = []
+CLUSTERIZER_NAMES: List[str] = ["kmeans", "agglomerative"]
 
 
 # MAIN ----------------------------------------------------------------------- #
 def main() -> None:
     args = prepare_args()
-    chosen_clusterizer = args.clusterizer
+    chosen_clusterizer_name = args.clusterizer
     save_charts = args.save
+
+    clusterizer = resolve_clusterizer_type(CLUSTERIZER_NAMES, chosen_clusterizer_name)
+    db_scan, lof = prepare_benchmark_algorithms()
 
     display_finish()
 
