@@ -12,7 +12,7 @@ def draw_plots(changes: List[int], warnings: List[int], accuracy_trend: List[flo
                train_size_range: List[int], detector_name: str, classifier_name: str,
                save_charts: bool) -> None:
     create_directory(RESULTS_DIR)
-
+    # TODO CONSIDER DIFFERENT COLORS
     for change in changes:
         plt.axvline(change, alpha=0.3, color="red")
 
@@ -22,6 +22,7 @@ def draw_plots(changes: List[int], warnings: List[int], accuracy_trend: List[flo
     seaborn.lineplot(x=train_size_range, y=accuracy_trend, alpha=0.4, color="black")
 
     plt.title(f"{detector_name}_{classifier_name}")
+    # TODO ADD PROPER LABELS
     plt.xlabel("TODO!!!")
     plt.ylabel("TODO!!!")
     if save_charts:
