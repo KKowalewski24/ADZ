@@ -1,18 +1,22 @@
 import subprocess
 import sys
 from argparse import ArgumentParser, Namespace
+from typing import List
 
 """
     How to run:
-        
+        python main.py -s -c 
 """
 
-
 # VAR ------------------------------------------------------------------------ #
+CLUSTERIZER_NAMES: List[str] = []
+
 
 # MAIN ----------------------------------------------------------------------- #
 def main() -> None:
     args = prepare_args()
+    chosen_clusterizer = args.clusterizer
+    save_charts = args.save
 
     display_finish()
 
@@ -20,6 +24,14 @@ def main() -> None:
 # DEF ------------------------------------------------------------------------ #
 def prepare_args() -> Namespace:
     arg_parser = ArgumentParser()
+
+    arg_parser.add_argument(
+        "-c", "--clusterizer", type=str, choices=CLUSTERIZER_NAMES,
+        help="Name of clusterizer"
+    )
+    arg_parser.add_argument(
+        "-s", "--save", default=False, action="store_true", help="Save charts to files"
+    )
 
     return arg_parser.parse_args()
 
