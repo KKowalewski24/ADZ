@@ -1,27 +1,29 @@
 import subprocess
 import sys
 from argparse import ArgumentParser, Namespace
-from typing import Dict
+from typing import Dict, List
 
 import pandas as pd
 
+from module.algorithm_type_resolver import resolve_pattern_detector
 from module.reader import read_dataset_1, read_dataset_2, read_dataset_3
 from module.utils import create_directory
 
 """
     How to run:
-        python main.py -s 
+        python main.py -s -a arima
 """
 
 # VAR ------------------------------------------------------------------------ #
 RESULTS_DIR = "results/"
+ALGORITHM_NAMES: List[str] = ["arima", "ets", "shesd"]
 
 
 # MAIN ----------------------------------------------------------------------- #
 def main() -> None:
     args = prepare_args()
+    chosen_algorithm = args.algorithm
     save_stats = args.save
-
     create_directory(RESULTS_DIR)
 
     datasets: Dict[str, pd.DataFrame] = {
@@ -31,6 +33,7 @@ def main() -> None:
     }
 
     for dataset in datasets:
+        pattern_detector = resolve_pattern_detector(ALGORITHM_NAMES, chosen_algorithm)
         pass
 
     display_finish()
@@ -40,6 +43,10 @@ def main() -> None:
 def prepare_args() -> Namespace:
     arg_parser = ArgumentParser()
 
+    arg_parser.add_argument(
+        "-a", "--algorithm", type=str, choices=ALGORITHM_NAMES,
+        help="Name of algorithm detecting special patterns"
+    )
     arg_parser.add_argument(
         "-s", "--save", default=False, action="store_true", help="Save charts to files"
     )
