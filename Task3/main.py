@@ -1,9 +1,9 @@
 from argparse import ArgumentParser, Namespace
-from typing import Any, Dict, List
+from typing import Dict, List
 
 import pandas as pd
 from sesd import seasonal_esd
-from statsmodels.tsa.arima_model import ARIMA
+from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.tsa.exponential_smoothing.ets import ETSModel
 
 from module.reader import read_dataset_1, read_dataset_2, read_dataset_3
@@ -33,17 +33,14 @@ def main() -> None:
         "dataset_3": read_dataset_3(),
     }
 
-    algorithms: Dict[str, Any] = {
-        ALGORITHM_NAMES[0]: ARIMA(),
-        ALGORITHM_NAMES[1]: ETSModel(),
-        ALGORITHM_NAMES[2]: None
-    }
-
     for dataset in datasets:
-        if chosen_algorithm == ALGORITHM_NAMES[2]:
-            seasonal_esd()
-        else:
-            algorithms[chosen_algorithm].fit().predict()
+        # TODO SET PROPER PARAMS
+        if chosen_algorithm == ALGORITHM_NAMES[0]:
+            pred = ARIMA(datasets[dataset].to_numpy(), order=(1, 1, 2)).fit().predict()
+        elif chosen_algorithm == ALGORITHM_NAMES[2]:
+            pred = ETSModel(datasets[dataset].to_numpy()).fit().predict()
+        elif chosen_algorithm == ALGORITHM_NAMES[2]:
+            anomalies = seasonal_esd(datasets[dataset].to_numpy())
 
     display_finish()
 
