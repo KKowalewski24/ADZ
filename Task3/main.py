@@ -1,13 +1,14 @@
-import subprocess
-import sys
 from argparse import ArgumentParser, Namespace
-from typing import Dict, List
+from typing import Any, Dict, List
 
 import pandas as pd
+from sesd import seasonal_esd
+from statsmodels.tsa.arima_model import ARIMA
+from statsmodels.tsa.exponential_smoothing.ets import ETSModel
 
-from module.algorithm_type_resolver import resolve_pattern_detector
 from module.reader import read_dataset_1, read_dataset_2, read_dataset_3
-from module.utils import create_directory
+from module.utils import check_if_exists_in_args, check_types_check_style, compile_to_pyc, \
+    create_directory, display_finish
 
 """
     How to run:
@@ -32,9 +33,17 @@ def main() -> None:
         "dataset_3": read_dataset_3(),
     }
 
+    algorithms: Dict[str, Any] = {
+        ALGORITHM_NAMES[0]: ARIMA(),
+        ALGORITHM_NAMES[1]: ETSModel(),
+        ALGORITHM_NAMES[2]: None
+    }
+
     for dataset in datasets:
-        pattern_detector = resolve_pattern_detector(ALGORITHM_NAMES, chosen_algorithm)
-        pass
+        if chosen_algorithm == ALGORITHM_NAMES[2]:
+            seasonal_esd()
+        else:
+            algorithms[chosen_algorithm].fit().predict()
 
     display_finish()
 
@@ -52,26 +61,6 @@ def prepare_args() -> Namespace:
     )
 
     return arg_parser.parse_args()
-
-
-# UTIL ----------------------------------------------------------------------- #
-def check_types_check_style() -> None:
-    subprocess.call(["mypy", "."])
-    subprocess.call(["flake8", "."])
-
-
-def compile_to_pyc() -> None:
-    subprocess.call(["python", "-m", "compileall", "."])
-
-
-def check_if_exists_in_args(arg: str) -> bool:
-    return arg in sys.argv
-
-
-def display_finish() -> None:
-    print("------------------------------------------------------------------------")
-    print("FINISHED")
-    print("------------------------------------------------------------------------")
 
 
 # __MAIN__ ------------------------------------------------------------------- #
