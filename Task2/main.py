@@ -1,5 +1,3 @@
-import subprocess
-import sys
 from argparse import ArgumentParser, Namespace
 from typing import Dict, List, Union
 
@@ -10,7 +8,8 @@ from module.LatexGenerator import LatexGenerator
 from module.algorithm_type_resolver import prepare_benchmark_algorithms, resolve_clusterizer_type
 from module.analysis import clusterize
 from module.reader import read_dataset_1, read_dataset_2, read_dataset_3
-from module.utils import create_directory, prepare_filename
+from module.utils import check_if_exists_in_args, check_types_check_style, compile_to_pyc, \
+    create_directory, display_finish, prepare_filename
 
 """
     How to run:
@@ -96,26 +95,6 @@ def prepare_args() -> Namespace:
     )
 
     return arg_parser.parse_args()
-
-
-# UTIL ----------------------------------------------------------------------- #
-def check_types_check_style() -> None:
-    subprocess.call(["mypy", "."])
-    subprocess.call(["flake8", "."])
-
-
-def compile_to_pyc() -> None:
-    subprocess.call(["python", "-m", "compileall", "."])
-
-
-def check_if_exists_in_args(arg: str) -> bool:
-    return arg in sys.argv
-
-
-def display_finish() -> None:
-    print("------------------------------------------------------------------------")
-    print("FINISHED")
-    print("------------------------------------------------------------------------")
 
 
 # __MAIN__ ------------------------------------------------------------------- #
