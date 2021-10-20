@@ -30,8 +30,8 @@ TRAIN_SIZE: int = 5000
 def main() -> None:
     args = prepare_args()
     generate_dataset = args.dataset
-    chosen_classifier = args.classifier
-    chosen_detector = args.detector
+    chosen_classifier_name = args.classifier
+    chosen_detector_name = args.detector
     save_charts = args.save
     create_directory(DATASET_DIR)
 
@@ -40,14 +40,14 @@ def main() -> None:
         return
 
     dataset: FileStream = FileStream(DATASET_PATH)
-    detector = resolve_detector_type(DETECTOR_NAMES, chosen_detector)
-    classifier = resolve_classifier_type(CLASSIFIER_NAMES, chosen_classifier)
+    detector = resolve_detector_type(DETECTOR_NAMES, chosen_detector_name)
+    classifier = resolve_classifier_type(CLASSIFIER_NAMES, chosen_classifier_name)
     changes, warnings, accuracy_trend, train_size_range = classify(
         detector, classifier, dataset, TRAIN_SIZE
     )
     draw_plots(
         changes, warnings, accuracy_trend, train_size_range,
-        chosen_detector, chosen_classifier, save_charts
+        chosen_detector_name, chosen_classifier_name, save_charts
     )
 
     display_finish()
