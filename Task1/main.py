@@ -21,8 +21,8 @@ DATASET_DIR: str = "data/"
 DATASET_PATH: str = DATASET_DIR + "data.csv"
 DATASET_ROWS_NUMBER: int = 20000
 
-DETECTOR_NAMES: List[str] = ["ddm", "eddm", "adwin", "kswin", "ph"]
-CLASSIFIER_NAMES: List[str] = ["knn", "vfdt"]
+DETECTOR_NAMES: List[str] = ["adwin", "ddm", "hddm_a", "kswin", "ph"]
+CLASSIFIER_NAMES: List[str] = ["knn"]
 TRAIN_SIZE: int = 5000
 
 
