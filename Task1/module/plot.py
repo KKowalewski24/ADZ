@@ -25,6 +25,6 @@ def draw_plots(changes: List[int], warnings: List[int], accuracy_trend: List[flo
     plt.xlabel("Numer próbki")
     plt.ylabel("Dokładność")
     if save_charts:
-        plt.savefig(RESULTS_DIR + prepare_filename(f"{detector_name}_{classifier_name}"))
+        plt.savefig(RESULTS_DIR + prepare_filename(f"{classifier_name}_{detector_name}"))
         plt.close()
     plt.show()
