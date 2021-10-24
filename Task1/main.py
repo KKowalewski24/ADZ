@@ -36,7 +36,7 @@ def main() -> None:
     create_directory(DATASET_DIR)
 
     if generate_dataset:
-        generate_data(DATASET_PATH, DATASET_ROWS_NUMBER)
+        generate_data(DATASET_PATH, 20000)
         return
 
     dataset: FileStream = FileStream(DATASET_PATH)
