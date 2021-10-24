@@ -3,6 +3,7 @@ from typing import List
 from skmultiflow.drift_detection import ADWIN, DDM, HDDM_A, KSWIN, PageHinkley
 from skmultiflow.drift_detection.base_drift_detector import BaseDriftDetector
 from skmultiflow.lazy import KNNClassifier
+from skmultiflow.trees import HoeffdingTreeClassifier
 
 
 def resolve_detector_type(detector_names: List[str], chosen_detector_name: str) -> BaseDriftDetector:
@@ -21,5 +22,6 @@ def resolve_detector_type(detector_names: List[str], chosen_detector_name: str) 
 
 def resolve_classifier_type(classifier_names: List[str], chosen_classifier_name: str):
     if classifier_names[0] == chosen_classifier_name:
-        # TODO Consider different knn params
-        return KNNClassifier(n_neighbors=8, max_window_size=2000)
+        return KNNClassifier(n_neighbors=5, max_window_size=2000)
+    elif classifier_names[1] == chosen_classifier_name:
+        return HoeffdingTreeClassifier()

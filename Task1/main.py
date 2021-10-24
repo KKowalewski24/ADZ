@@ -18,14 +18,14 @@ from module.utils import check_if_exists_in_args, check_types_check_style, compi
 """
 
 # VAR ------------------------------------------------------------------------ #
+GENERATED_DATASET_ROWS_NUMBER: int = 20000
 DATASET_DIR: str = "data/"
 ORIGINAL_DATASET_PATH: str = DATASET_DIR + "weatherAUS.csv"
 DATASET_PATH: str = DATASET_DIR + "filtered_weatherAUS.csv"
-GENERATED_DATASET_ROWS_NUMBER: int = 20000
 
 DETECTOR_NAMES: List[str] = ["adwin", "ddm", "hddm_a", "kswin", "ph"]
-CLASSIFIER_NAMES: List[str] = ["knn"]
-TRAIN_SIZE: int = 5000
+CLASSIFIER_NAMES: List[str] = ["knn", "vfdt"]
+TRAIN_SIZE: int = 3000
 
 
 # MAIN ----------------------------------------------------------------------- #
