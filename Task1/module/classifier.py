@@ -33,6 +33,6 @@ def classify(detector: BaseDriftDetector,
             warnings.append(i)
 
         classifier.partial_fit(X, y)
-        accuracy_trend.append(correct_predictions / (i * 100))
+        accuracy_trend.append((correct_predictions / i) * 100)
 
     return changes, warnings, accuracy_trend, list(range(train_size))

@@ -1,3 +1,4 @@
+import os
 from argparse import ArgumentParser, Namespace
 from typing import List
 
@@ -5,7 +6,7 @@ from skmultiflow.data import FileStream
 
 from module.algorithm_type_resolver import resolve_classifier_type, resolve_detector_type
 from module.classifier import classify
-from module.data_generator import generate_data
+from module.data_generator import generate_data, preprocess_data
 from module.plot import draw_plots
 from module.utils import check_if_exists_in_args, check_types_check_style, compile_to_pyc, \
     create_directory, display_finish
@@ -18,8 +19,9 @@ from module.utils import check_if_exists_in_args, check_types_check_style, compi
 
 # VAR ------------------------------------------------------------------------ #
 DATASET_DIR: str = "data/"
-DATASET_PATH: str = DATASET_DIR + "data.csv"
-DATASET_ROWS_NUMBER: int = 20000
+ORIGINAL_DATASET_PATH: str = DATASET_DIR + "weatherAUS.csv"
+DATASET_PATH: str = DATASET_DIR + "filtered_weather.csv"
+GENERATED_DATASET_ROWS_NUMBER: int = 20000
 
 DETECTOR_NAMES: List[str] = ["adwin", "ddm", "hddm_a", "kswin", "ph"]
 CLASSIFIER_NAMES: List[str] = ["knn"]
@@ -33,11 +35,14 @@ def main() -> None:
     chosen_classifier_name = args.classifier
     chosen_detector_name = args.detector
     save_charts = args.save
-    create_directory(DATASET_DIR)
 
     if generate_dataset:
-        generate_data(DATASET_PATH, 20000)
+        create_directory(DATASET_DIR)
+        generate_data(DATASET_PATH, GENERATED_DATASET_ROWS_NUMBER)
         return
+
+    if not os.path.exists(DATASET_PATH):
+        preprocess_data(ORIGINAL_DATASET_PATH, DATASET_PATH)
 
     dataset: FileStream = FileStream(DATASET_PATH)
     detector = resolve_detector_type(DETECTOR_NAMES, chosen_detector_name)
