@@ -8,8 +8,7 @@ from module.algorithm_type_resolver import resolve_classifier_type, resolve_dete
 from module.classifier import classify
 from module.data_generator import generate_data, preprocess_data
 from module.plot import draw_plots
-from module.utils import check_if_exists_in_args, check_types_check_style, compile_to_pyc, \
-    create_directory, display_finish
+from module.utils import create_directory, display_finish, run_main
 
 """
     How to run:
@@ -82,9 +81,4 @@ def prepare_args() -> Namespace:
 
 # __MAIN__ ------------------------------------------------------------------- #
 if __name__ == "__main__":
-    if check_if_exists_in_args("-t"):
-        check_types_check_style()
-    elif check_if_exists_in_args("-b"):
-        compile_to_pyc()
-    else:
-        main()
+    run_main(main)
