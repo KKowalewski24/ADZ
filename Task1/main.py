@@ -6,9 +6,9 @@ from skmultiflow.data import FileStream
 
 from module.algorithm_type_resolver import resolve_classifier_type, resolve_detector_type
 from module.classifier import classify
-from module.data_generator import generate_data, preprocess_data
+from module.preprocessing import preprocess_data
 from module.plot import draw_plots
-from module.utils import create_directory, display_finish, run_main
+from module.utils import display_finish, run_main
 
 """
     How to run:
@@ -30,15 +30,9 @@ TRAIN_SIZE: int = 3000
 # MAIN ----------------------------------------------------------------------- #
 def main() -> None:
     args = prepare_args()
-    generate_dataset = args.dataset
     chosen_classifier_name = args.classifier
     chosen_detector_name = args.detector
     save_charts = args.save
-
-    if generate_dataset:
-        create_directory(DATASET_DIR)
-        generate_data(DATASET_PATH, GENERATED_DATASET_ROWS_NUMBER)
-        return
 
     if not os.path.exists(DATASET_PATH):
         preprocess_data(ORIGINAL_DATASET_PATH, DATASET_PATH)
@@ -61,9 +55,6 @@ def main() -> None:
 def prepare_args() -> Namespace:
     arg_parser = ArgumentParser()
 
-    arg_parser.add_argument(
-        "-ds", "--dataset", default=False, action="store_true", help="Generate dataset"
-    )
     arg_parser.add_argument(
         "-d", "--detector", type=str, choices=DETECTOR_NAMES,
         help="Name of detector"
