@@ -1,47 +1,53 @@
 import os
 from argparse import ArgumentParser, Namespace
-from typing import List
+from typing import Dict
 
 from skmultiflow.data import FileStream
+from skmultiflow.drift_detection import ADWIN, DDM, HDDM_A, KSWIN, PageHinkley
 
-from module.algorithm_type_resolver import resolve_detector_type
 from module.classifier import classify
-from module.preprocessing import preprocess_data
 from module.plot import draw_plots
+from module.preprocessing import preprocess_data
 from module.utils import display_finish, run_main
 
 """
     How to run:
-        Generating dataset: python main.py -ds
-        Running detection:  python main.py -d ddm -c knn -s
+        Running detection:  python main.py -d ddm -ts 3000 -s
 """
 
 # VAR ------------------------------------------------------------------------ #
-GENERATED_DATASET_ROWS_NUMBER: int = 20000
 DATASET_DIR: str = "data/"
 ORIGINAL_DATASET_PATH: str = DATASET_DIR + "weatherAUS.csv"
 DATASET_PATH: str = DATASET_DIR + "filtered_weatherAUS.csv"
 
-DETECTOR_NAMES: List[str] = ["adwin", "ddm", "hddm_a", "kswin", "ph"]
-TRAIN_SIZE: int = 3000
+DETECTORS_SETUP: Dict = {
+    "adwin": ADWIN,
+    "ddm": DDM,
+    "hddm_a": HDDM_A,
+    "kswin": KSWIN,
+    "ph": PageHinkley
+}
 
 
 # MAIN ----------------------------------------------------------------------- #
 def main() -> None:
     args = prepare_args()
     chosen_detector_name = args.detector
+    window_size = args.window_size
     save_charts = args.save
 
     if not os.path.exists(DATASET_PATH):
+        print("Processing data...")
         preprocess_data(ORIGINAL_DATASET_PATH, DATASET_PATH)
 
-    dataset: FileStream = FileStream(DATASET_PATH)
-    detector = resolve_detector_type(DETECTOR_NAMES, chosen_detector_name)
-    changes, warnings, accuracy_trend, train_size_range = classify(
-        detector, dataset, TRAIN_SIZE
+    print("Classifying...")
+    changes, warnings, accuracy_trend, window_size_range = classify(
+        DETECTORS_SETUP[chosen_detector_name](), FileStream(DATASET_PATH), window_size
     )
+
+    print("Drawing plots...")
     draw_plots(
-        changes, warnings, accuracy_trend, train_size_range,
+        changes, warnings, accuracy_trend, window_size_range,
         chosen_detector_name, save_charts
     )
 
@@ -53,8 +59,11 @@ def prepare_args() -> Namespace:
     arg_parser = ArgumentParser()
 
     arg_parser.add_argument(
-        "-d", "--detector", type=str, choices=DETECTOR_NAMES,
-        help="Name of detector", required=True
+        "-d", "--detector", required=True, type=str, choices=DETECTORS_SETUP.keys(),
+        help="Name of detector"
+    )
+    arg_parser.add_argument(
+        "-ws", "--window_size", required=True, type=int, help="Window size"
     )
     arg_parser.add_argument(
         "-s", "--save", default=False, action="store_true", help="Save charts to files"

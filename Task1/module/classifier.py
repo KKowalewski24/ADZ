@@ -6,16 +6,16 @@ from skmultiflow.lazy import KNNClassifier
 from tqdm import tqdm
 
 
-def classify(detector: BaseDriftDetector,
-             dataset: FileStream, train_size: int
-             ) -> Tuple[List[int], List[int], List[float], List[int]]:
-    classifier = KNNClassifier(max_window_size=train_size)
+def classify(
+        detector: BaseDriftDetector, dataset: FileStream, window_size: int
+) -> Tuple[List[int], List[int], List[float], List[int]]:
+    classifier = KNNClassifier(max_window_size=window_size)
     changes: List[int] = []
     warnings: List[int] = []
     accuracy_trend: List[float] = []
     correct_predictions: int = 0
 
-    for i in tqdm(range(1, train_size + 1)):
+    for i in tqdm(range(1, window_size + 1)):
         X, y = dataset.next_sample()
         pred = classifier.predict(X)
 
@@ -34,4 +34,4 @@ def classify(detector: BaseDriftDetector,
         classifier.partial_fit(X, y)
         accuracy_trend.append((correct_predictions / i) * 100)
 
-    return changes, warnings, accuracy_trend, list(range(train_size))
+    return changes, warnings, accuracy_trend, list(range(window_size))

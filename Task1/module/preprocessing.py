@@ -11,7 +11,10 @@ def preprocess_data(input_filepath: str, output_filepath: str) -> None:
 
     # encode text columns
     label_encoder = LabelEncoder()
-    for column_name in ["Location", "WindGustDir", "WindDir9am", "WindDir3pm", "RainToday", "RainTomorrow"]:
+    columns_names = [
+        "Location", "WindGustDir", "WindDir9am", "WindDir3pm", "RainToday", "RainTomorrow"
+    ]
+    for column_name in columns_names:
         df[column_name] = label_encoder.fit_transform(df[column_name])
 
     # impute missing numerical values using mean value

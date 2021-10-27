@@ -2,16 +2,14 @@
 
 set -e
 
-# KNN
-python main.py -c knn -s -d adwin
-python main.py -c knn -s -d ddm
-python main.py -c knn -s -d hddm_a
-python main.py -c knn -s -d kswin
-python main.py -c knn -s -d ph
+python main.py -s -ws 3000 -d adwin
+python main.py -s -ws 3000 -d ddm
+python main.py -s -ws 3000 -d hddm_a
+python main.py -s -ws 3000 -d kswin
+python main.py -s -ws 3000 -d ph
 
-# HoeffdingTreeClassifier
-python main.py -c vfdt -s -d adwin
-python main.py -c vfdt -s -d ddm
-python main.py -c vfdt -s -d hddm_a
-python main.py -c vfdt -s -d kswin
-python main.py -c vfdt -s -d ph
+python main.py -s -ws 15000 -d adwin
+python main.py -s -ws 15000 -d ddm
+python main.py -s -ws 15000 -d hddm_a
+python main.py -s -ws 15000 -d kswin
+python main.py -s -ws 15000 -d ph
