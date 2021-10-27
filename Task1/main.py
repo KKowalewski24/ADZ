@@ -54,7 +54,7 @@ def prepare_args() -> Namespace:
 
     arg_parser.add_argument(
         "-d", "--detector", type=str, choices=DETECTOR_NAMES,
-        help="Name of detector"
+        help="Name of detector", required=True
     )
     arg_parser.add_argument(
         "-s", "--save", default=False, action="store_true", help="Save charts to files"

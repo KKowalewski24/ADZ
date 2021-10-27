@@ -9,7 +9,7 @@ from tqdm import tqdm
 def classify(detector: BaseDriftDetector,
              dataset: FileStream, train_size: int
              ) -> Tuple[List[int], List[int], List[float], List[int]]:
-    classifier = KNNClassifier()
+    classifier = KNNClassifier(max_window_size=train_size)
     changes: List[int] = []
     warnings: List[int] = []
     accuracy_trend: List[float] = []
