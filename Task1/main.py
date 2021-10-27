@@ -12,7 +12,7 @@ from module.utils import display_finish, run_main
 
 """
     How to run:
-        Running detection:  python main.py -d ddm -ts 3000 -s
+        Running detection:  python main.py -d ddm -ws 3000 -s
 """
 
 # VAR ------------------------------------------------------------------------ #
@@ -20,12 +20,13 @@ DATASET_DIR: str = "data/"
 ORIGINAL_DATASET_PATH: str = DATASET_DIR + "weatherAUS.csv"
 DATASET_PATH: str = DATASET_DIR + "filtered_weatherAUS.csv"
 
+# TODO SET PARAMS
 DETECTORS_SETUP: Dict = {
-    "adwin": ADWIN,
-    "ddm": DDM,
-    "hddm_a": HDDM_A,
-    "kswin": KSWIN,
-    "ph": PageHinkley
+    "adwin": (ADWIN, []),
+    "ddm": (DDM, []),
+    "hddm_a": (HDDM_A, []),
+    "kswin": (KSWIN, []),
+    "ph": (PageHinkley, [])
 }
 
 
@@ -42,7 +43,8 @@ def main() -> None:
 
     print("Classifying...")
     changes, warnings, accuracy_trend, window_size_range = classify(
-        DETECTORS_SETUP[chosen_detector_name](), FileStream(DATASET_PATH), window_size
+        DETECTORS_SETUP[chosen_detector_name][0](*DETECTORS_SETUP[chosen_detector_name][1]),
+        FileStream(DATASET_PATH), window_size
     )
 
     print("Drawing plots...")
