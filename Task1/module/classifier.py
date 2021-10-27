@@ -1,16 +1,15 @@
-from typing import List, Tuple, Union
+from typing import List, Tuple
 
 from skmultiflow.data import FileStream
 from skmultiflow.drift_detection.base_drift_detector import BaseDriftDetector
 from skmultiflow.lazy import KNNClassifier
-from skmultiflow.trees import HoeffdingTreeClassifier
 from tqdm import tqdm
 
 
 def classify(detector: BaseDriftDetector,
-             classifier: Union[KNNClassifier, HoeffdingTreeClassifier],
              dataset: FileStream, train_size: int
              ) -> Tuple[List[int], List[int], List[float], List[int]]:
+    classifier = KNNClassifier()
     changes: List[int] = []
     warnings: List[int] = []
     accuracy_trend: List[float] = []

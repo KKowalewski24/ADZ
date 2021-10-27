@@ -9,8 +9,7 @@ RESULTS_DIR = "results/"
 
 
 def draw_plots(changes: List[int], warnings: List[int], accuracy_trend: List[float],
-               train_size_range: List[int], detector_name: str, classifier_name: str,
-               save_charts: bool) -> None:
+               train_size_range: List[int], detector_name: str, save_charts: bool) -> None:
     create_directory(RESULTS_DIR)
 
     for change in changes:
@@ -21,10 +20,10 @@ def draw_plots(changes: List[int], warnings: List[int], accuracy_trend: List[flo
 
     seaborn.lineplot(x=train_size_range, y=accuracy_trend, alpha=0.4, color="green")
 
-    plt.title(f"{detector_name}_{classifier_name}")
+    plt.title(f"{detector_name}_KNN")
     plt.xlabel("Numer próbki")
     plt.ylabel("Dokładność")
     if save_charts:
-        plt.savefig(RESULTS_DIR + prepare_filename(f"{classifier_name}_{detector_name}"))
+        plt.savefig(RESULTS_DIR + prepare_filename(f"KNN_{detector_name}"))
         plt.close()
     plt.show()
