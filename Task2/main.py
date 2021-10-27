@@ -3,13 +3,13 @@ from typing import Dict, List, Union
 
 import pandas as pd
 from matplotlib import pyplot as plt
+from sklearn.cluster import AgglomerativeClustering, DBSCAN, KMeans
+from sklearn.neighbors import LocalOutlierFactor
 
 from module.LatexGenerator import LatexGenerator
-from module.algorithm_type_resolver import prepare_benchmark_algorithms, resolve_clusterizer_type
 from module.analysis import clusterize
 from module.reader import read_dataset_1, read_dataset_2, read_dataset_3
-from module.utils import check_if_exists_in_args, check_types_check_style, compile_to_pyc, \
-    create_directory, display_finish, prepare_filename
+from module.utils import create_directory, display_finish, prepare_filename, run_main
 
 """
     How to run:
@@ -18,7 +18,16 @@ from module.utils import check_if_exists_in_args, check_types_check_style, compi
 
 # VAR ------------------------------------------------------------------------ #
 RESULTS_DIR = "results/"
-CLUSTERIZER_NAMES: List[str] = ["kmeans", "agglomerative"]
+
+CLUSTERIZERS_SETUP: Dict = {
+    "kmeans": KMeans,
+    "agglomerative": AgglomerativeClustering
+}
+
+BENCHMARK_ALGORITHMS_SETUP: Dict = {
+    "db_scan": DBSCAN(),
+    "lof": LocalOutlierFactor()
+}
 
 latex_generator: LatexGenerator = LatexGenerator(RESULTS_DIR)
 
@@ -30,8 +39,6 @@ def main() -> None:
     save_stats = args.save
     create_directory(RESULTS_DIR)
 
-    clusterizer = resolve_clusterizer_type(CLUSTERIZER_NAMES, chosen_clusterizer_name)
-    benchmark_algorithms, benchmark_algorithms_names = prepare_benchmark_algorithms()
     print("Reading datasets ...")
     datasets: Dict[str, pd.DataFrame] = {
         "dataset_1": read_dataset_1(),
@@ -41,11 +48,15 @@ def main() -> None:
 
     for dataset in datasets:
         print(f"Clustering dataset: {dataset} ...")
-        statistics_list = clusterize(datasets[dataset], clusterizer, benchmark_algorithms)
+        statistics_list = clusterize(
+            datasets[dataset], CLUSTERIZERS_SETUP[chosen_clusterizer_name](),
+            list(BENCHMARK_ALGORITHMS_SETUP.values())
+        )
+
         if save_stats:
             print(f"Saving results to file for dataset: {dataset} ...")
             benchmark_stats = [
-                convert_statistics(statistics_list[i], benchmark_algorithms_names[i - 1])
+                convert_statistics(statistics_list[i], list(BENCHMARK_ALGORITHMS_SETUP.keys())[i - 1])
                 for i in range(1, len(statistics_list))
             ]
 
@@ -87,7 +98,7 @@ def prepare_args() -> Namespace:
     arg_parser = ArgumentParser()
 
     arg_parser.add_argument(
-        "-c", "--clusterizer", type=str, choices=CLUSTERIZER_NAMES,
+        "-c", "--clusterizer", type=str, choices=CLUSTERIZERS_SETUP.keys(),
         help="Name of clusterizer"
     )
     arg_parser.add_argument(
@@ -99,9 +110,4 @@ def prepare_args() -> Namespace:
 
 # __MAIN__ ------------------------------------------------------------------- #
 if __name__ == "__main__":
-    if check_if_exists_in_args("-t"):
-        check_types_check_style()
-    elif check_if_exists_in_args("-b"):
-        compile_to_pyc()
-    else:
-        main()
+    run_main(main)
