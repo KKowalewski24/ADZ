@@ -7,8 +7,7 @@ from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.tsa.exponential_smoothing.ets import ETSModel
 
 from module.reader import read_dataset_1, read_dataset_2, read_dataset_3
-from module.utils import check_if_exists_in_args, check_types_check_style, compile_to_pyc, \
-    create_directory, display_finish
+from module.utils import create_directory, display_finish, run_main
 
 """
     How to run:
@@ -23,7 +22,7 @@ ALGORITHM_NAMES: List[str] = ["arima", "ets", "shesd"]
 # MAIN ----------------------------------------------------------------------- #
 def main() -> None:
     args = prepare_args()
-    chosen_algorithm = args.algorithm
+    chosen_algorithm_name = args.algorithm
     save_stats = args.save
     create_directory(RESULTS_DIR)
 
@@ -35,11 +34,11 @@ def main() -> None:
 
     for dataset in datasets:
         # TODO SET PROPER PARAMS
-        if chosen_algorithm == ALGORITHM_NAMES[0]:
+        if chosen_algorithm_name == ALGORITHM_NAMES[0]:
             pred = ARIMA(datasets[dataset].to_numpy(), order=(1, 1, 2)).fit().predict()
-        elif chosen_algorithm == ALGORITHM_NAMES[2]:
+        elif chosen_algorithm_name == ALGORITHM_NAMES[2]:
             pred = ETSModel(datasets[dataset].to_numpy()).fit().predict()
-        elif chosen_algorithm == ALGORITHM_NAMES[2]:
+        elif chosen_algorithm_name == ALGORITHM_NAMES[2]:
             anomalies = seasonal_esd(datasets[dataset].to_numpy())
 
     display_finish()
@@ -62,9 +61,4 @@ def prepare_args() -> Namespace:
 
 # __MAIN__ ------------------------------------------------------------------- #
 if __name__ == "__main__":
-    if check_if_exists_in_args("-t"):
-        check_types_check_style()
-    elif check_if_exists_in_args("-b"):
-        compile_to_pyc()
-    else:
-        main()
+    run_main(main)
