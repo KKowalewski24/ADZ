@@ -1,5 +1,6 @@
+import json
 from argparse import ArgumentParser, Namespace
-from typing import Dict, List, Union
+from typing import Dict, List, Tuple, Union
 
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -18,18 +19,17 @@ from module.utils import create_directory, display_finish, prepare_filename, run
 
 # VAR ------------------------------------------------------------------------ #
 RESULTS_DIR = "results/"
+latex_generator: LatexGenerator = LatexGenerator(RESULTS_DIR)
 
-CLUSTERIZERS_SETUP: Dict = {
-    "kmeans": KMeans,
-    "agglomerative": AgglomerativeClustering
+CLUSTERIZERS_SETUP: Dict[str, Tuple] = {
+    "kmeans": (KMeans, {}),
+    "agglomerative": (AgglomerativeClustering, {})
 }
 
 BENCHMARK_ALGORITHMS_SETUP: Dict = {
     "db_scan": DBSCAN(),
     "lof": LocalOutlierFactor()
 }
-
-latex_generator: LatexGenerator = LatexGenerator(RESULTS_DIR)
 
 
 # MAIN ----------------------------------------------------------------------- #
@@ -49,17 +49,23 @@ def main() -> None:
     for dataset in datasets:
         print(f"Clustering dataset: {dataset} ...")
         statistics_list = clusterize(
-            datasets[dataset], CLUSTERIZERS_SETUP[chosen_clusterizer_name](),
+            datasets[dataset],
+            CLUSTERIZERS_SETUP[chosen_clusterizer_name][0](
+                **CLUSTERIZERS_SETUP[chosen_clusterizer_name][1]
+            ),
             list(BENCHMARK_ALGORITHMS_SETUP.values())
         )
 
+        benchmark_stats = [
+            convert_statistics(statistics_list[i], list(BENCHMARK_ALGORITHMS_SETUP.keys())[i - 1])
+            for i in range(1, len(statistics_list))
+        ]
+
+        for stat in benchmark_stats:
+            print(json.dumps(stat, indent=4))
+
         if save_stats:
             print(f"Saving results to file for dataset: {dataset} ...")
-            benchmark_stats = [
-                convert_statistics(statistics_list[i], list(BENCHMARK_ALGORITHMS_SETUP.keys())[i - 1])
-                for i in range(1, len(statistics_list))
-            ]
-
             latex_generator.generate_vertical_table(
                 ["Classifier", "Silhouette", "Calinski_Harabasz",
                  "Davies_Bouldin", "Rand_score", "Fowlkes_Mallows"],
