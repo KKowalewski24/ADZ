@@ -1,6 +1,6 @@
 import os
 from argparse import ArgumentParser, Namespace
-from typing import Dict, Tuple
+from typing import Any, Dict, List, Tuple
 
 from skmultiflow.data import FileStream
 from skmultiflow.drift_detection import ADWIN, DDM, HDDM_A, KSWIN, PageHinkley
@@ -20,12 +20,12 @@ DATASET_DIR: str = "data/"
 ORIGINAL_DATASET_PATH: str = DATASET_DIR + "weatherAUS.csv"
 DATASET_PATH: str = DATASET_DIR + "filtered_weatherAUS.csv"
 
-DETECTORS_SETUP: Dict[str, Tuple] = {
-    "adwin": (ADWIN, {}),
-    "ddm": (DDM, {}),
-    "hddm_a": (HDDM_A, {}),
-    "kswin": (KSWIN, {"alpha": 0.01}),
-    "ph": (PageHinkley, {})
+DETECTORS_SETUP: Dict[str, Tuple[Any, List[Dict[str, Any]]]] = {
+    "adwin": (ADWIN, [{}]),
+    "ddm": (DDM, [{}]),
+    "hddm_a": (HDDM_A, [{}]),
+    "kswin": (KSWIN, [{"alpha": 0.01}]),
+    "ph": (PageHinkley, [{}])
 }
 
 
@@ -40,17 +40,18 @@ def main() -> None:
         print("Processing data...")
         preprocess_data(ORIGINAL_DATASET_PATH, DATASET_PATH)
 
-    print("Classifying...")
-    changes, warnings, accuracy_trend, window_size_range = classify(
-        DETECTORS_SETUP[chosen_detector_name][0](**DETECTORS_SETUP[chosen_detector_name][1]),
-        FileStream(DATASET_PATH), window_size
-    )
+    for params in DETECTORS_SETUP[chosen_detector_name][1]:
+        print(f"Classifying for params {params} ...")
+        changes, warnings, accuracy_trend, window_size_range = classify(
+            DETECTORS_SETUP[chosen_detector_name][0](**params),
+            FileStream(DATASET_PATH), window_size
+        )
 
-    print("Drawing plots...")
-    draw_plots(
-        changes, warnings, accuracy_trend, window_size_range,
-        chosen_detector_name, save_charts
-    )
+        print("Drawing plots...")
+        draw_plots(
+            changes, warnings, accuracy_trend, window_size_range,
+            chosen_detector_name, params, save_charts
+        )
 
     display_finish()
 

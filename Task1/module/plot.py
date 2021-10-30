@@ -1,4 +1,5 @@
-from typing import List
+import json
+from typing import Any, Dict, List
 
 import seaborn
 from matplotlib import pyplot as plt
@@ -8,8 +9,9 @@ from module.utils import create_directory, prepare_filename
 RESULTS_DIR = "results/"
 
 
-def draw_plots(changes: List[int], warnings: List[int], accuracy_trend: List[float],
-               train_size_range: List[int], detector_name: str, save_charts: bool) -> None:
+def draw_plots(changes: List[int], warnings: List[int],
+               accuracy_trend: List[float], train_size_range: List[int],
+               detector_name: str, params: Dict[str, Any], save_charts: bool) -> None:
     create_directory(RESULTS_DIR)
 
     for change in changes:
@@ -20,7 +22,7 @@ def draw_plots(changes: List[int], warnings: List[int], accuracy_trend: List[flo
 
     seaborn.lineplot(x=train_size_range, y=accuracy_trend, alpha=0.4, color="green")
 
-    plt.title(f"{detector_name}_KNN")
+    plt.title(f"KNN_{detector_name}_{json.dumps(params)}")
     plt.xlabel("Numer próbki")
     plt.ylabel("Dokładność")
     if save_charts:
