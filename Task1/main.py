@@ -21,11 +21,11 @@ ORIGINAL_DATASET_PATH: str = DATASET_DIR + "weatherAUS.csv"
 DATASET_PATH: str = DATASET_DIR + "filtered_weatherAUS.csv"
 
 DETECTORS_SETUP: Dict[str, Tuple[Any, List[Dict[str, Any]]]] = {
-    "adwin": (ADWIN, [{}]),
-    "ddm": (DDM, [{}]),
+    "adwin": (ADWIN, [{"delta": 0.002}, {"delta": 0.01}, {"delta": 0.001}]),
+    "ddm": (DDM, [{"warning_level": 2.0}, {"warning_level": 0.5}]),
     "hddm_a": (HDDM_A, [{}]),
-    "kswin": (KSWIN, [{"alpha": 0.01}]),
-    "ph": (PageHinkley, [{}])
+    "kswin": (KSWIN, [{"alpha": 0.005}, {"alpha": 0.01}]),
+    "ph": (PageHinkley, [{"threshold": 50}, {"threshold": 10}])
 }
 
 
