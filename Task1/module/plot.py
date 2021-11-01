@@ -1,4 +1,3 @@
-import json
 from typing import Any, Dict, List
 
 import seaborn
@@ -22,10 +21,15 @@ def draw_plots(changes: List[int], warnings: List[int],
 
     seaborn.lineplot(x=train_size_range, y=accuracy_trend, alpha=0.4, color="green")
 
-    plt.title(f"KNN_{detector_name}_{json.dumps(params)}")
+    plt.title(
+        f"KNN {detector_name} {' '.join([param + '=' + str(params[param]) for param in params])}"
+    )
     plt.xlabel("Numer próbki")
     plt.ylabel("Dokładność")
     if save_charts:
-        plt.savefig(RESULTS_DIR + prepare_filename(f"KNN_{detector_name}"))
+        plt.savefig(
+            RESULTS_DIR + prepare_filename(
+                f"KNN_{detector_name}_{'_'.join([str(params[param]) for param in params])}")
+        )
         plt.close()
     plt.show()

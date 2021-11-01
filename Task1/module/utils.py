@@ -11,7 +11,7 @@ def create_directory(path: str) -> None:
 
 
 def prepare_filename(name: str, extension: str = "", add_date: bool = True) -> str:
-    return (name + ("-" + datetime.now().strftime("%H%M%S") if add_date else "")
+    return (name.replace(".", "") + ("-" + datetime.now().strftime("%H%M%S") if add_date else "")
             + extension).replace(" ", "")
 
 
