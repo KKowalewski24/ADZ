@@ -30,7 +30,7 @@ def classify(
             classifier.reset()
             if len(warning_zone_samples[0]) > 0:
                 classifier.fit(warning_zone_samples[0], warning_zone_samples[1])
-                warning_zone_samples = ([],[])
+                warning_zone_samples = ([], [])
             changes.append(i)
 
         if detector.detected_warning_zone():
