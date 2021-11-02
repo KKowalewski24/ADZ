@@ -14,10 +14,10 @@ def draw_plots(changes: List[int], warnings: List[int],
     create_directory(RESULTS_DIR)
 
     for change in changes:
-        plt.axvline(change, alpha=0.3, color="red")
+        plt.axvline(change, alpha=1.0, color="red", linewidth=4)
 
     for warning in warnings:
-        plt.axvline(warning, alpha=0.3, color="orange")
+        plt.axvline(warning, alpha=0.7, color="orange")
 
     seaborn.lineplot(x=train_size_range, y=accuracy_trend, alpha=0.4, color="green")
 

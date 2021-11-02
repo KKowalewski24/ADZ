@@ -9,7 +9,8 @@ from tqdm import tqdm
 def classify(
         detector: BaseDriftDetector, dataset: FileStream, window_size: int
 ) -> Tuple[List[int], List[int], List[float], List[int]]:
-    classifier = KNNClassifier(max_window_size=window_size)
+    classifier = KNNClassifier(n_neighbors=5, leaf_size=100, max_window_size=window_size)
+    warning_zone_samples = ([], [])
     changes: List[int] = []
     warnings: List[int] = []
     accuracy_trend: List[float] = []
@@ -26,10 +27,18 @@ def classify(
             detector.add_element(1)
 
         if detector.detected_change():
+            classifier.reset()
+            if len(warning_zone_samples[0]) > 0:
+                classifier.fit(warning_zone_samples[0], warning_zone_samples[1])
+                warning_zone_samples = ([],[])
             changes.append(i)
 
         if detector.detected_warning_zone():
             warnings.append(i)
+            warning_zone_samples[0].append(X)
+            warning_zone_samples[1].append(y)
+        else:
+            warning_zone_samples = ([], [])
 
         classifier.partial_fit(X, y)
         accuracy_trend.append((correct_predictions / i) * 100)
