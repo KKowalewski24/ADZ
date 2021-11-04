@@ -1,16 +1,13 @@
-import json
 from argparse import ArgumentParser, Namespace
-from typing import Dict, List, Tuple, Union
+from typing import Any, Dict, List, Tuple
 
 import pandas as pd
-from matplotlib import pyplot as plt
 from sklearn.cluster import AgglomerativeClustering, DBSCAN, KMeans
 from sklearn.neighbors import LocalOutlierFactor
 
 from module.LatexGenerator import LatexGenerator
-from module.analysis import clusterize
 from module.reader import read_dataset_1, read_dataset_2, read_dataset_3
-from module.utils import create_directory, display_finish, prepare_filename, run_main
+from module.utils import create_directory, display_finish, run_main
 
 """
     How to run:
@@ -21,14 +18,11 @@ from module.utils import create_directory, display_finish, prepare_filename, run
 RESULTS_DIR = "results/"
 latex_generator: LatexGenerator = LatexGenerator(RESULTS_DIR)
 
-CLUSTERIZERS_SETUP: Dict[str, Tuple] = {
-    "kmeans": (KMeans, {}),
-    "agglomerative": (AgglomerativeClustering, {})
-}
-
-BENCHMARK_ALGORITHMS_SETUP: Dict = {
-    "db_scan": DBSCAN(),
-    "lof": LocalOutlierFactor()
+CLUSTERIZERS_SETUP: Dict[str, Tuple[Any, List[Dict[str, Any]]]] = {
+    "kmeans": (KMeans, [{}]),
+    "agglomerative": (AgglomerativeClustering, [{}]),
+    "db_scan": (DBSCAN, [{}]),
+    "lof": (LocalOutlierFactor, [{}])
 }
 
 
@@ -48,58 +42,17 @@ def main() -> None:
 
     for dataset in datasets:
         print(f"Clustering dataset: {dataset} ...")
-        statistics_list = clusterize(
-            datasets[dataset],
-            CLUSTERIZERS_SETUP[chosen_clusterizer_name][0](
-                **CLUSTERIZERS_SETUP[chosen_clusterizer_name][1]
-            ),
-            list(BENCHMARK_ALGORITHMS_SETUP.values())
-        )
-
-        benchmark_stats = [
-            convert_statistics(statistics_list[i], list(BENCHMARK_ALGORITHMS_SETUP.keys())[i - 1])
-            for i in range(1, len(statistics_list))
-        ]
-
-        for stat in benchmark_stats:
-            print(json.dumps(stat, indent=4))
+        for params in CLUSTERIZERS_SETUP[chosen_clusterizer_name][1]:
+            CLUSTERIZERS_SETUP[chosen_clusterizer_name][0](**params)
+            datasets[dataset]
 
         if save_stats:
             print(f"Saving results to file for dataset: {dataset} ...")
-            latex_generator.generate_vertical_table(
-                ["Classifier", "Silhouette", "Calinski_Harabasz",
-                 "Davies_Bouldin", "Rand_score", "Fowlkes_Mallows"],
-                [convert_statistics(statistics_list[0], chosen_clusterizer_name)] + benchmark_stats,
-                dataset + "_metrics"
-            )
 
     display_finish()
 
 
 # DEF ------------------------------------------------------------------------ #
-def convert_statistics(statistics: Dict[str, float], algorithm_name: str) -> List[Union[str, float]]:
-    return [
-        algorithm_name,
-        statistics["silhouette"],
-        statistics["calinski_harabasz"],
-        statistics["davies_bouldin"],
-        statistics["rand_score"],
-        statistics["fowlkes_mallows"]
-    ]
-
-
-def draw_plots(clusterizer_name: str, save_charts: bool, results_dir: str) -> None:
-    # TODO
-    plt.title("TODO!!!")
-    plt.xlabel("TODO!!!")
-    plt.ylabel("TODO!!!")
-
-    if save_charts:
-        plt.savefig(results_dir + prepare_filename(f"{clusterizer_name}"))
-        plt.close()
-    plt.show()
-
-
 def prepare_args() -> Namespace:
     arg_parser = ArgumentParser()
 
