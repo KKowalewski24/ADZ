@@ -6,7 +6,8 @@ from sklearn.cluster import AgglomerativeClustering, DBSCAN, KMeans
 from sklearn.neighbors import LocalOutlierFactor
 
 from module.LatexGenerator import LatexGenerator
-from module.reader import read_dataset_1, read_dataset_2, read_dataset_3, read_iris_ds
+from module.analysis import clusterize
+from module.reader import read_dataset_2, read_dataset_3, read_dataset_penguins, read_iris_ds
 from module.utils import create_directory, display_finish, run_main
 
 """
@@ -35,7 +36,7 @@ def main() -> None:
 
     print("Reading datasets ...")
     datasets: Dict[str, pd.DataFrame] = {
-        "dataset_1": read_dataset_1(),
+        "penguins": read_dataset_penguins(),
         "dataset_2": read_dataset_2(),
         "dataset_3": read_dataset_3(),
         "iris": read_iris_ds(),
@@ -44,8 +45,10 @@ def main() -> None:
     for dataset in datasets:
         print(f"Clustering dataset: {dataset} ...")
         for params in CLUSTERIZERS_SETUP[chosen_clusterizer_name][1]:
-            CLUSTERIZERS_SETUP[chosen_clusterizer_name][0](**params)
-            datasets[dataset]
+            clusterize(
+                datasets[dataset],
+                CLUSTERIZERS_SETUP[chosen_clusterizer_name][0](**params)
+            )
 
         if save_stats:
             print(f"Saving results to file for dataset: {dataset} ...")
