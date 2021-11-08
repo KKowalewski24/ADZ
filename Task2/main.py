@@ -6,7 +6,7 @@ from sklearn.cluster import AgglomerativeClustering, DBSCAN, KMeans
 from sklearn.neighbors import LocalOutlierFactor
 
 from module.LatexGenerator import LatexGenerator
-from module.reader import read_dataset_1, read_dataset_2, read_dataset_3
+from module.reader import read_dataset_1, read_dataset_2, read_dataset_3, read_iris_ds
 from module.utils import create_directory, display_finish, run_main
 
 """
@@ -38,6 +38,7 @@ def main() -> None:
         "dataset_1": read_dataset_1(),
         "dataset_2": read_dataset_2(),
         "dataset_3": read_dataset_3(),
+        "iris": read_iris_ds(),
     }
 
     for dataset in datasets:
