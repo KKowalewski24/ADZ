@@ -19,6 +19,7 @@ def read_penguins_dataset() -> pd.DataFrame:
     return df.fillna(df.mean())
 
 
+# https://www.kaggle.com/jmcaro/wheat-seedsuci
 def read_wheat_seeds_dataset() -> pd.DataFrame:
     return pd.read_csv(f"{DATASET_DIR}seeds.csv")
 
