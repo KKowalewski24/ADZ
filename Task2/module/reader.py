@@ -16,12 +16,12 @@ def read_penguins_dataset() -> pd.DataFrame:
     for column_name in ["species", "island", "sex"]:
         df[column_name] = label_encoder.fit_transform(df[column_name])
 
-    return df.fillna(df.mean())
+    return df.fillna(df.mean()).iloc[:, :-1]
 
 
 # https://www.kaggle.com/jmcaro/wheat-seedsuci
 def read_wheat_seeds_dataset() -> pd.DataFrame:
-    return pd.read_csv(f"{DATASET_DIR}seeds.csv")
+    return pd.read_csv(f"{DATASET_DIR}seeds.csv").iloc[:, :-1]
 
 
 def read_synthetic_dataset() -> pd.DataFrame:
