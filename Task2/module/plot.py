@@ -1,13 +1,20 @@
+import pandas as pd
 from matplotlib import pyplot as plt
 
 from module.utils import prepare_filename
 
 
-def draw_plots(clusterizer_name: str, results_dir: str, save_data: bool) -> None:
-    # TODO
-
+def draw_plots(x_axis_data: pd.Series, y_axis_data: pd.Series, radius: float,
+               name: str, results_dir: str, save_data: bool) -> None:
+    plt.scatter(
+        x_axis_data, y_axis_data, color="k", s=3.0, label="Data points"
+    )
+    plt.scatter(
+        x_axis_data, y_axis_data, s=1000 * radius,
+        edgecolors="r", facecolors="none", label="Outlier scores"
+    )
     _set_descriptions("", "", "")
-    _show_and_save(clusterizer_name, results_dir, save_data)
+    _show_and_save(name, results_dir, save_data)
 
 
 def _set_descriptions(title: str, x_label: str = "", y_label: str = "") -> None:

@@ -7,12 +7,13 @@ from sklearn.neighbors import LocalOutlierFactor
 
 from module.LatexGenerator import LatexGenerator
 from module.analysis import clusterize
+from module.plot import draw_plots
 from module.reader import read_dataset_3, read_iris_ds, read_penguins_dataset, read_synthetic_dataset
 from module.utils import create_directory, display_finish, run_main
 
 """
     How to run:
-        python main.py -s -c kmeans
+        python main.py -s -c lof
 """
 
 # VAR ------------------------------------------------------------------------ #
@@ -35,23 +36,29 @@ def main() -> None:
     create_directory(RESULTS_DIR)
 
     print("Reading datasets ...")
-    datasets: Dict[str, pd.DataFrame] = {
-        "penguins": read_penguins_dataset(),
-        "dataset_3": read_dataset_3(),
-        "synthetic_dataset": read_synthetic_dataset(),
-        "iris": read_iris_ds(),
+    datasets: Dict[str, Tuple[pd.DataFrame, List[Tuple[int, int]]]] = {
+        "penguins": (read_penguins_dataset(), [(0, 1)]),
+        "dataset_3": (read_dataset_3(), [(0, 1)]),
+        "synthetic_dataset": (read_synthetic_dataset(), [(0, 1)]),
+        "iris": (read_iris_ds(), [(0, 1)]),
     }
 
     for dataset in datasets:
         print(f"Clustering dataset: {dataset} ...")
+        current_dataset = datasets[dataset][0]
+        dimensions_to_draw = datasets[dataset][1]
+
         for params in CLUSTERIZERS_SETUP[chosen_clusterizer_name][1]:
-            clusterize(
-                datasets[dataset],
+            radius = clusterize(
+                current_dataset,
                 CLUSTERIZERS_SETUP[chosen_clusterizer_name][0](**params)
             )
-
-        if save_stats:
-            print(f"Saving results to file for dataset: {dataset} ...")
+            for dimension in dimensions_to_draw:
+                draw_plots(
+                    current_dataset.iloc[:, dimension[0]],
+                    current_dataset.iloc[:, dimension[1]],
+                    radius, f"{dataset}_{chosen_clusterizer_name}", RESULTS_DIR, save_stats
+                )
 
     display_finish()
 
