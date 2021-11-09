@@ -13,7 +13,7 @@ def draw_plots(x_axis_data: pd.Series, y_axis_data: pd.Series, radius: float,
         x_axis_data, y_axis_data, s=1000 * radius,
         edgecolors="g", facecolors="none", label="Outlier scores"
     )
-    _set_descriptions("", "", "")
+    _set_descriptions(name, "", "")
     _show_and_save(name, results_dir, save_data)
 
 

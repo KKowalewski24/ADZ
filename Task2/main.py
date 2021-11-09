@@ -55,10 +55,15 @@ def main() -> None:
                 CLUSTERIZERS_SETUP[chosen_clusterizer_name][0](**params)
             )
             for dimension in dimensions_to_draw:
+                name = (
+                    f"{dataset}_{chosen_clusterizer_name}_"
+                    f"{'_'.join([str(params[param]) for param in params])}_"
+                    f"{'_'.join([str(dim) for dim in dimension])}"
+                )
                 draw_plots(
                     current_dataset.iloc[:, dimension[0]],
                     current_dataset.iloc[:, dimension[1]],
-                    radius, f"{dataset}_{chosen_clusterizer_name}", RESULTS_DIR, save_stats
+                    radius, name, RESULTS_DIR, save_stats
                 )
 
     display_finish()
