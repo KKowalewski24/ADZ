@@ -7,7 +7,7 @@ from sklearn.neighbors import LocalOutlierFactor
 
 from module.LatexGenerator import LatexGenerator
 from module.analysis import clusterize
-from module.reader import read_dataset_2, read_dataset_3, read_dataset_penguins, read_iris_ds
+from module.reader import read_dataset_3, read_iris_ds, read_penguins_dataset, read_synthetic_dataset
 from module.utils import create_directory, display_finish, run_main
 
 """
@@ -36,9 +36,9 @@ def main() -> None:
 
     print("Reading datasets ...")
     datasets: Dict[str, pd.DataFrame] = {
-        "penguins": read_dataset_penguins(),
-        "dataset_2": read_dataset_2(),
+        "penguins": read_penguins_dataset(),
         "dataset_3": read_dataset_3(),
+        "synthetic_dataset": read_synthetic_dataset(),
         "iris": read_iris_ds(),
     }
 
