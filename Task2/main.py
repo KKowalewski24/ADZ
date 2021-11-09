@@ -36,6 +36,7 @@ def main() -> None:
     create_directory(RESULTS_DIR)
 
     print("Reading datasets ...")
+    # TODO SET PROPER DIMENSIONS TO DRAW
     datasets: Dict[str, Tuple[pd.DataFrame, List[Tuple[int, int]]]] = {
         "penguins": (read_penguins_dataset(), [(0, 1)]),
         "dataset_3": (read_dataset_3(), [(0, 1)]),
