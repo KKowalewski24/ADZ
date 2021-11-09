@@ -8,7 +8,8 @@ from sklearn.neighbors import LocalOutlierFactor
 from module.LatexGenerator import LatexGenerator
 from module.analysis import clusterize
 from module.plot import draw_plots
-from module.reader import read_dataset_3, read_iris_ds, read_penguins_dataset, read_synthetic_dataset
+from module.reader import read_iris_ds, read_penguins_dataset, read_synthetic_dataset, \
+    read_wheat_seeds_dataset
 from module.utils import create_directory, display_finish, run_main
 
 """
@@ -39,7 +40,7 @@ def main() -> None:
     # TODO SET PROPER DIMENSIONS TO DRAW
     datasets: Dict[str, Tuple[pd.DataFrame, List[Tuple[int, int]]]] = {
         "penguins": (read_penguins_dataset(), [(0, 1)]),
-        "dataset_3": (read_dataset_3(), [(0, 1)]),
+        "wheat_seeds": (read_wheat_seeds_dataset(), [(0, 1)]),
         "synthetic_dataset": (read_synthetic_dataset(), [(0, 1)]),
         "iris": (read_iris_ds(), [(0, 1)]),
     }

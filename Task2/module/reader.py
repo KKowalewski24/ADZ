@@ -19,9 +19,8 @@ def read_penguins_dataset() -> pd.DataFrame:
     return df.fillna(df.mean())
 
 
-def read_dataset_3() -> pd.DataFrame:
-    # TODO ADD IMPL
-    return pd.DataFrame({})
+def read_wheat_seeds_dataset() -> pd.DataFrame:
+    return pd.read_csv(f"{DATASET_DIR}seeds.csv")
 
 
 def read_synthetic_dataset() -> pd.DataFrame:
