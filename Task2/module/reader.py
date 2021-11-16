@@ -1,33 +1,35 @@
 import os
-from typing import List
+from typing import Tuple
 
 import numpy as np
 import pandas as pd
-from sklearn import preprocessing
-from sklearn.preprocessing import LabelEncoder
+import h5py
+from scipy.io import loadmat
 
-DATASET_DIR: str = "data/"
-SYNTHETIC_DATASET_PATH = f"{DATASET_DIR}synthetic_dataset.csv"
+SYNTHETIC_DATASET_PATH = "data/synthetic_dataset.csv"
 
 
-def read_synthetic_dataset() -> pd.DataFrame:
+def read_synthetic_dataset() -> Tuple[np.ndarray, np.ndarray]:
     if not os.path.exists(SYNTHETIC_DATASET_PATH):
         np.random.seed(42)
         X_inliers = 0.3 * np.random.randn(200, 2)
         X_inliers = np.r_[X_inliers + 2, X_inliers - 2]
         X_outliers = np.random.uniform(low=-4, high=4, size=(20, 2))
-        pd.DataFrame(np.r_[X_inliers, X_outliers]).to_csv(SYNTHETIC_DATASET_PATH, index=False)
+        pd.DataFrame(np.r_[X_inliers,
+                           X_outliers]).to_csv(SYNTHETIC_DATASET_PATH,
+                                               index=False)
 
-    return pd.read_csv(SYNTHETIC_DATASET_PATH)
-
-
-def _encode_labels(df: pd.DataFrame, column_names: List[str]) -> pd.DataFrame:
-    label_encoder = LabelEncoder()
-    for column_name in column_names:
-        df[column_name] = label_encoder.fit_transform(df[column_name])
-
-    return df
+    data = pd.read_csv(SYNTHETIC_DATASET_PATH)
+    return np.array(data), np.concatenate([np.zeros((400, )), np.ones((20, ))])
 
 
-def _normalize_data(df: pd.DataFrame) -> pd.DataFrame:
-    return preprocessing.normalize(df, axis=0)
+def read_http_dataset() -> Tuple[np.ndarray, np.ndarray]:
+    file = h5py.File("data/http.mat")
+    X = np.array(file["X"]).transpose()
+    y = np.array(file["y"]).transpose().squeeze()
+    return X, y
+
+
+def read_mammography_dataset() -> Tuple[np.ndarray, np.ndarray]:
+    file = loadmat("data/mammography.mat")
+    return file["X"], file["y"].squeeze()
