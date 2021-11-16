@@ -1,9 +1,9 @@
 import os
 from typing import Tuple
 
+import h5py
 import numpy as np
 import pandas as pd
-import h5py
 from scipy.io import loadmat
 
 SYNTHETIC_DATASET_PATH = "data/synthetic_dataset.csv"
@@ -20,7 +20,7 @@ def read_synthetic_dataset() -> Tuple[np.ndarray, np.ndarray]:
                                                index=False)
 
     data = pd.read_csv(SYNTHETIC_DATASET_PATH)
-    return np.array(data), np.concatenate([np.zeros((400, )), np.ones((20, ))])
+    return np.array(data), np.concatenate([np.zeros((400,)), np.ones((20,))])
 
 
 def read_http_dataset() -> Tuple[np.ndarray, np.ndarray]:
