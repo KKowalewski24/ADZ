@@ -2,26 +2,9 @@ import os
 
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder
 
 DATASET_DIR: str = "data/"
 SYNTHETIC_DATASET_PATH = f"{DATASET_DIR}synthetic_dataset.csv"
-
-
-# https://www.kaggle.com/parulpandey/palmer-archipelago-antarctica-penguin-data?select=penguins_size.csv
-def read_penguins_dataset() -> pd.DataFrame:
-    df = pd.read_csv(f"{DATASET_DIR}penguins_size.csv")
-
-    label_encoder = LabelEncoder()
-    for column_name in ["species", "island", "sex"]:
-        df[column_name] = label_encoder.fit_transform(df[column_name])
-
-    return df.fillna(df.mean()).iloc[:, :-1]
-
-
-# https://www.kaggle.com/jmcaro/wheat-seedsuci
-def read_wheat_seeds_dataset() -> pd.DataFrame:
-    return pd.read_csv(f"{DATASET_DIR}seeds.csv").iloc[:, :-1]
 
 
 def read_synthetic_dataset() -> pd.DataFrame:
@@ -33,7 +16,3 @@ def read_synthetic_dataset() -> pd.DataFrame:
         pd.DataFrame(np.r_[X_inliers, X_outliers]).to_csv(SYNTHETIC_DATASET_PATH, index=False)
 
     return pd.read_csv(SYNTHETIC_DATASET_PATH)
-
-
-def read_iris_ds() -> pd.DataFrame:
-    return pd.read_csv(f"{DATASET_DIR}Iris.csv").iloc[:, 1:5]
