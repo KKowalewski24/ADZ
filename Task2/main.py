@@ -1,5 +1,5 @@
 from argparse import ArgumentParser, Namespace
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 import pandas as pd
 from sklearn.cluster import AgglomerativeClustering, DBSCAN, KMeans
@@ -40,8 +40,12 @@ def main() -> None:
     save_stats = args.save
     create_directory(RESULTS_DIR)
 
-    clusters: List[int] = (clusterizers[chosen_clusterizer_name]()
-                           .fit_predict(datasets[chosen_dataset_name]))
+    chosen_dataset = datasets[chosen_dataset_name]
+    chosen_dataset["cluster"] = (clusterizers[chosen_clusterizer_name]().fit_predict(chosen_dataset))
+
+    name = (f"{chosen_clusterizer_name}_{chosen_dataset_name}_"
+            f"{'_'.join([str(param) for param in algorithm_params])}")
+    draw_plots(chosen_dataset, name, RESULTS_DIR, save_stats)
 
     display_finish()
 

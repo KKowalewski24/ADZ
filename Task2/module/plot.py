@@ -1,17 +1,25 @@
+from typing import Dict
+
 import pandas as pd
 from matplotlib import pyplot as plt
 
 from module.utils import prepare_filename
 
+colors: Dict[int, str] = {
+    -1: "k",
+    0: "b",
+    1: "g",
+    2: "r",
+    3: "c",
+    4: "m",
+    5: "y",
+    6: "w",
+}
 
-def draw_plots(x_axis_data: pd.Series, y_axis_data: pd.Series, radius: float,
-               name: str, results_dir: str, save_data: bool) -> None:
+
+def draw_plots(df: pd.DataFrame, name: str, results_dir: str, save_data: bool) -> None:
     plt.scatter(
-        x_axis_data, y_axis_data, color="k", s=3.0, label="Data points"
-    )
-    plt.scatter(
-        x_axis_data, y_axis_data, s=1000 * radius,
-        edgecolors="g", facecolors="none", label="Outlier scores"
+        df.iloc[:, 0], df.iloc[:, 1], color=df.cluster.map(colors), s=15.0
     )
     _set_descriptions(name, "", "")
     _show_and_save(name, results_dir, save_data)
