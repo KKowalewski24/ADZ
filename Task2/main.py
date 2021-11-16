@@ -3,6 +3,7 @@ from typing import Any, Dict, Tuple
 
 import numpy as np
 from sklearn.cluster import AgglomerativeClustering, DBSCAN, KMeans
+from sklearn.metrics import precision_score, recall_score
 from sklearn.neighbors import LocalOutlierFactor
 
 from module.LatexGenerator import LatexGenerator
@@ -44,10 +45,14 @@ def main() -> None:
 
     X, y = datasets[chosen_dataset_name]
     y_pred = (clusterizers[chosen_clusterizer_name]().fit_predict(X))
+    recall = list(np.round(recall_score(y, y_pred, average=None), 2))
+    precision = list(np.round(precision_score(y, y_pred, average=None), 2))
 
+    print(f"Recall {recall} & Precision {precision}")
     name = (f"{chosen_clusterizer_name}_{chosen_dataset_name}_"
-            f"{'_'.join([str(param) for param in algorithm_params])}")
-    draw_plots(X, y_pred, name, RESULTS_DIR, save_stats)
+            f"{'_'.join([str(param) for param in algorithm_params])}_")
+    title = name + f"Rcl={recall}_Prec={precision}"
+    draw_plots(X, y_pred, name, title, RESULTS_DIR, save_stats)
 
     display_finish()
 

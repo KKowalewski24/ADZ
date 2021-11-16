@@ -18,13 +18,15 @@ colors: Dict[int, str] = {
 }
 
 
-def draw_plots(X: np.ndarray, y: np.ndarray, name: str, results_dir: str, save_data: bool) -> None:
+def draw_plots(X: np.ndarray, y: np.ndarray, name: str, title: str,
+               results_dir: str, save_data: bool) -> None:
     reduced_data = PCA(n_components=2).fit_transform(X)
     plt.scatter(
-        reduced_data[:, 0], reduced_data[:, 1], color=list(map(lambda label: colors[label], y)), s=15.0
+        reduced_data[:, 0], reduced_data[:, 1],
+        color=list(map(lambda label: colors[label], y)), s=15.0
     )
 
-    _set_descriptions(name, "", "")
+    _set_descriptions(title, "", "")
     _show_and_save(name, results_dir, save_data)
 
 
