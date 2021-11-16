@@ -1,17 +1,17 @@
 #!/bin/bash
 
-python main.py -s -c kmeans -ds  -ap
-python main.py -s -c kmeans -ds  -ap
+python main.py -s -c kmeans -ds http -ap
+python main.py -s -c kmeans -ds mammography -ap
 python main.py -s -c kmeans -ds synthetic -ap
 
-python main.py -s -c agglomerative -ds  -ap
-python main.py -s -c agglomerative -ds  -ap
+python main.py -s -c agglomerative -ds http -ap
+python main.py -s -c agglomerative -ds mammography -ap
 python main.py -s -c agglomerative -ds synthetic -ap
 
-python main.py -s -c db_scan -ds  -ap
-python main.py -s -c db_scan -ds  -ap
+python main.py -s -c db_scan -ds http -ap
+python main.py -s -c db_scan -ds mammography -ap
 python main.py -s -c db_scan -ds synthetic -ap
 
-python main.py -s -c lof -ds  -ap
-python main.py -s -c lof -ds  -ap
+python main.py -s -c lof -ds http -ap
+python main.py -s -c lof -ds mammography -ap
 python main.py -s -c lof -ds synthetic -ap
