@@ -20,16 +20,21 @@ def read_synthetic_dataset() -> Tuple[np.ndarray, np.ndarray]:
                                                index=False)
 
     data = pd.read_csv(SYNTHETIC_DATASET_PATH)
-    return np.array(data), np.concatenate([np.zeros((400,)), np.ones((20,))])
+    return np.array(data), np.concatenate(
+        [np.zeros((400, )), np.zeros((20, )) - 1]).astype(np.int32)
 
 
 def read_http_dataset() -> Tuple[np.ndarray, np.ndarray]:
     file = h5py.File("data/http.mat")
     X = np.array(file["X"]).transpose()
-    y = np.array(file["y"]).transpose().squeeze()
+    y = np.array(file["y"]).transpose().squeeze().astype(np.int32)
+    y[y == 1] = -1
     return X, y
 
 
 def read_mammography_dataset() -> Tuple[np.ndarray, np.ndarray]:
     file = loadmat("data/mammography.mat")
-    return file["X"], file["y"].squeeze()
+    X = file["X"]
+    y = file["y"].squeeze().astype(np.int32)
+    y[y == 1] = -1
+    return X, y

@@ -47,8 +47,8 @@ def main() -> None:
     X, y = datasets[chosen_dataset_name]
     params = [typee(param) for param, typee in zip(algorithm_params, clusterizers[chosen_clusterizer_name][1:])]
     y_pred = clusterizers[chosen_clusterizer_name][0](*params).fit_predict(X)
-    recall = list(np.round(recall_score(y, y_pred, average=None), 2))
-    precision = list(np.round(precision_score(y, y_pred, average=None), 2))
+    recall = np.round(recall_score(y, y_pred, average=None)[0], 2)
+    precision = np.round(precision_score(y, y_pred, average=None)[0], 2)
 
     print(f"Recall {recall} & Precision {precision}")
     name = (f"{chosen_clusterizer_name}_{chosen_dataset_name}_"
