@@ -57,7 +57,7 @@ def main() -> None:
     print(f"Recall {recall} & Precision {precision}")
     print(f"{chosen_clusterizer_name} ({algorithm_params}) - {chosen_dataset_name}")
     name = (f"{chosen_clusterizer_name}_{chosen_dataset_name}_"
-            f"{'_'.join([str(param) for param in algorithm_params])}_")
+            f"{'_'.join([str(param).replace('.', ',') for param in algorithm_params])}_")
     title = name + f"Rcl={recall}_Prec={precision}"
     draw_plots(X, y_pred, name, title, RESULTS_DIR, save_stats)
 
