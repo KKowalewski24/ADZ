@@ -2,7 +2,7 @@ from argparse import ArgumentParser, Namespace
 from typing import Any, Dict, Tuple
 
 import numpy as np
-from sklearn.cluster import AgglomerativeClustering, DBSCAN
+from sklearn.cluster import DBSCAN
 from sklearn.metrics import precision_score, recall_score
 from sklearn.neighbors import LocalOutlierFactor
 
@@ -11,6 +11,7 @@ from module.plot import draw_plots
 from module.reader import read_http_dataset, read_mammography_dataset, read_synthetic_dataset
 from module.utils import create_directory, display_finish, run_main
 from module.OutlierKMeans import OutlierKMeans
+from module.OutlierAgglomerativeClustering import OutlierAgglomerativeClustering
 
 """
     How to run:
@@ -23,7 +24,7 @@ latex_generator: LatexGenerator = LatexGenerator(RESULTS_DIR)
 
 clusterizers: Dict[str, Any] = {
     "kmeans": (OutlierKMeans, int, float),
-    "agglomerative": (AgglomerativeClustering,),
+    "agglomerative": (OutlierAgglomerativeClustering, float, float),
     "db_scan": (DBSCAN, float),
     "lof": (LocalOutlierFactor, int)
 }
@@ -47,8 +48,8 @@ def main() -> None:
     X, y = datasets[chosen_dataset_name]
     params = [typee(param) for param, typee in zip(algorithm_params, clusterizers[chosen_clusterizer_name][1:])]
     y_pred = clusterizers[chosen_clusterizer_name][0](*params).fit_predict(X)
-    recall = np.round(recall_score(y, y_pred, average=None)[0], 2)
-    precision = np.round(precision_score(y, y_pred, average=None)[0], 2)
+    recall = np.round(recall_score(y, y_pred, average=None, zero_division=0)[0], 2)
+    precision = np.round(precision_score(y, y_pred, average=None, zero_division=0)[0], 2)
 
     print(f"Recall {recall} & Precision {precision}")
     name = (f"{chosen_clusterizer_name}_{chosen_dataset_name}_"
