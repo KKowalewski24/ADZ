@@ -1,0 +1,10 @@
+numpy
+sklearn
+seaborn
+matplotlib
+pandas
+flake8
+pep8-naming
+mypy
+h5py
+scipy
