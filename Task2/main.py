@@ -24,7 +24,7 @@ latex_generator: LatexGenerator = LatexGenerator(RESULTS_DIR)
 clusterizers: Dict[str, Any] = {
     "kmeans": (OutlierKMeans, int, float),
     "agglomerative": (AgglomerativeClustering,),
-    "db_scan": (DBSCAN,),
+    "db_scan": (DBSCAN, float),
     "lof": (LocalOutlierFactor,)
 }
 
