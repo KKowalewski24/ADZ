@@ -52,6 +52,7 @@ def main() -> None:
     precision = np.round(precision_score(y, y_pred, average=None, zero_division=0)[0], 2)
 
     print(f"Recall {recall} & Precision {precision}")
+    print(f"{chosen_clusterizer_name} ({algorithm_params}) - {chosen_dataset_name}")
     name = (f"{chosen_clusterizer_name}_{chosen_dataset_name}_"
             f"{'_'.join([str(param) for param in algorithm_params])}_")
     title = name + f"Rcl={recall}_Prec={precision}"
