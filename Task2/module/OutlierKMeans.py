@@ -3,6 +3,7 @@ from sklearn.cluster import KMeans
 
 
 class OutlierKMeans(KMeans):
+
     def __init__(self,
                  n_clusters,
                  outlier_fraction_threshold,
@@ -25,6 +26,7 @@ class OutlierKMeans(KMeans):
                          copy_x=copy_x,
                          algorithm=algorithm)
         self.outlier_fraction_threshold = outlier_fraction_threshold
+
 
     def fit(self, X, y=None, sample_weight=None):
         super().fit(X, y, sample_weight)

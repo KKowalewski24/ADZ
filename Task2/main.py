@@ -7,11 +7,11 @@ from sklearn.metrics import precision_score, recall_score
 from sklearn.neighbors import LocalOutlierFactor
 
 from module.LatexGenerator import LatexGenerator
+from module.OutlierAgglomerativeClustering import OutlierAgglomerativeClustering
+from module.OutlierKMeans import OutlierKMeans
 from module.plot import draw_plots
 from module.reader import read_http_dataset, read_mammography_dataset, read_synthetic_dataset
 from module.utils import create_directory, display_finish, run_main
-from module.OutlierKMeans import OutlierKMeans
-from module.OutlierAgglomerativeClustering import OutlierAgglomerativeClustering
 
 """
     How to run:
@@ -46,7 +46,10 @@ def main() -> None:
     create_directory(RESULTS_DIR)
 
     X, y = datasets[chosen_dataset_name]
-    params = [typee(param) for param, typee in zip(algorithm_params, clusterizers[chosen_clusterizer_name][1:])]
+    params = [
+        typee(param)
+        for param, typee in zip(algorithm_params, clusterizers[chosen_clusterizer_name][1:])
+    ]
     y_pred = clusterizers[chosen_clusterizer_name][0](*params).fit_predict(X)
     recall = np.round(recall_score(y, y_pred, average=None, zero_division=0)[0], 2)
     precision = np.round(precision_score(y, y_pred, average=None, zero_division=0)[0], 2)

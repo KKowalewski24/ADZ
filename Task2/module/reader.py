@@ -10,7 +10,7 @@ SYNTHETIC_DATASET_PATH = "data/synthetic_dataset.csv"
 
 
 def _random_samples(X, fraction):
-    return X[np.random.randint(len(X), size=(int(fraction * len(X)), ))]
+    return X[np.random.randint(len(X), size=(int(fraction * len(X)),))]
 
 
 def read_synthetic_dataset() -> Tuple[np.ndarray, np.ndarray]:
@@ -19,13 +19,10 @@ def read_synthetic_dataset() -> Tuple[np.ndarray, np.ndarray]:
         X_inliers = 0.3 * np.random.randn(200, 2)
         X_inliers = np.r_[X_inliers + 2, X_inliers - 2]
         X_outliers = np.random.uniform(low=-4, high=4, size=(20, 2))
-        pd.DataFrame(np.r_[X_inliers,
-                           X_outliers]).to_csv(SYNTHETIC_DATASET_PATH,
-                                               index=False)
+        pd.DataFrame(np.r_[X_inliers, X_outliers]).to_csv(SYNTHETIC_DATASET_PATH, index=False)
 
     data = pd.read_csv(SYNTHETIC_DATASET_PATH)
-    return np.array(data), np.concatenate(
-        [np.zeros((400, )), np.zeros((20, )) - 1]).astype(np.int32)
+    return np.array(data), np.concatenate([np.zeros((400,)), np.zeros((20,)) - 1]).astype(np.int32)
 
 
 def read_http_dataset() -> Tuple[np.ndarray, np.ndarray]:
@@ -36,9 +33,10 @@ def read_http_dataset() -> Tuple[np.ndarray, np.ndarray]:
     np.random.seed(47)
     X_normal = _random_samples(X[y == 0], 0.01)
     X_outliers = _random_samples(X[y == 1], 0.02)
-    return np.concatenate([X_normal, X_outliers]), np.concatenate(
-        [np.zeros((len(X_normal), )),
-         np.zeros((len(X_outliers), )) - 1]).astype(np.int32)
+    return (
+        np.concatenate([X_normal, X_outliers]),
+        np.concatenate([np.zeros((len(X_normal),)), np.zeros((len(X_outliers),)) - 1]).astype(np.int32)
+    )
 
 
 def read_mammography_dataset() -> Tuple[np.ndarray, np.ndarray]:
