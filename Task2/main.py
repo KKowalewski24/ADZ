@@ -2,7 +2,7 @@ from argparse import ArgumentParser, Namespace
 from typing import Any, Dict, Tuple
 
 import numpy as np
-from sklearn.cluster import AgglomerativeClustering, DBSCAN, KMeans
+from sklearn.cluster import AgglomerativeClustering, DBSCAN
 from sklearn.metrics import precision_score, recall_score
 from sklearn.neighbors import LocalOutlierFactor
 
@@ -10,6 +10,7 @@ from module.LatexGenerator import LatexGenerator
 from module.plot import draw_plots
 from module.reader import read_http_dataset, read_mammography_dataset, read_synthetic_dataset
 from module.utils import create_directory, display_finish, run_main
+from module.OutlierKMeans import OutlierKMeans
 
 """
     How to run:
@@ -21,10 +22,10 @@ RESULTS_DIR = "results/"
 latex_generator: LatexGenerator = LatexGenerator(RESULTS_DIR)
 
 clusterizers: Dict[str, Any] = {
-    "kmeans": KMeans,
-    "agglomerative": AgglomerativeClustering,
-    "db_scan": DBSCAN,
-    "lof": LocalOutlierFactor
+    "kmeans": (OutlierKMeans, int, float),
+    "agglomerative": (AgglomerativeClustering,),
+    "db_scan": (DBSCAN,),
+    "lof": (LocalOutlierFactor,)
 }
 
 datasets: Dict[str, Tuple[np.ndarray, np.ndarray]] = {
@@ -44,7 +45,8 @@ def main() -> None:
     create_directory(RESULTS_DIR)
 
     X, y = datasets[chosen_dataset_name]
-    y_pred = (clusterizers[chosen_clusterizer_name]().fit_predict(X))
+    params = [typee(param) for param, typee in zip(algorithm_params, clusterizers[chosen_clusterizer_name][1:])]
+    y_pred = clusterizers[chosen_clusterizer_name][0](*params).fit_predict(X)
     recall = list(np.round(recall_score(y, y_pred, average=None), 2))
     precision = list(np.round(precision_score(y, y_pred, average=None), 2))
 
@@ -70,7 +72,7 @@ def prepare_args() -> Namespace:
         help="Name of dataset"
     )
     arg_parser.add_argument(
-        "-ap", "--algorithm_params", nargs="+", required=True,
+        "-ap", "--algorithm_params", nargs="+", required=True, type=str,
         help="List of arguments for certain algorithm"
     )
     arg_parser.add_argument(

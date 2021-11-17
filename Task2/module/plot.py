@@ -6,25 +6,13 @@ from sklearn.decomposition import PCA
 
 from module.utils import prepare_filename
 
-colors: Dict[int, str] = {
-    -1: "k",
-    0: "b",
-    1: "g",
-    2: "r",
-    3: "c",
-    4: "m",
-    5: "y",
-    6: "w",
-}
-
 
 def draw_plots(X: np.ndarray, y: np.ndarray, name: str, title: str,
-               results_dir: str, save_data: bool) -> None:
+               results_dir: str, save_data: bool, size=20) -> None:
     reduced_data = PCA(n_components=2).fit_transform(X)
-    plt.scatter(
-        reduced_data[:, 0], reduced_data[:, 1],
-        color=list(map(lambda label: colors[label], y)), s=15.0
-    )
+    plt.scatter(reduced_data[y==-1,0],reduced_data[y==-1,1], c="k", s=size)
+    for label in set(np.unique(y)) - {-1}:
+        plt.scatter(reduced_data[y==label,0], reduced_data[y==label,1], s=size)
 
     _set_descriptions(title, "", "")
     _show_and_save(name, results_dir, save_data)
