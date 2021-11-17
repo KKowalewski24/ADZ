@@ -25,7 +25,7 @@ clusterizers: Dict[str, Any] = {
     "kmeans": (OutlierKMeans, int, float),
     "agglomerative": (AgglomerativeClustering,),
     "db_scan": (DBSCAN, float),
-    "lof": (LocalOutlierFactor,)
+    "lof": (LocalOutlierFactor, int)
 }
 
 datasets: Dict[str, Tuple[np.ndarray, np.ndarray]] = {
