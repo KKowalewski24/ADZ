@@ -42,6 +42,9 @@ def main() -> None:
     for dataset in DATASETS:
         detector.detect(DATASETS[dataset])
 
+        if save_stats:
+            pass
+
     display_finish()
 
 
