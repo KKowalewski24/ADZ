@@ -1,11 +1,12 @@
 from argparse import ArgumentParser, Namespace
-from typing import Dict, List
+from typing import Dict
 
-import pandas as pd
-from sesd import seasonal_esd
-from statsmodels.tsa.arima.model import ARIMA
-from statsmodels.tsa.exponential_smoothing.ets import ETSModel
+import numpy as np
 
+from module.detector.ArimaDetector import ArimaDetector
+from module.detector.Detector import Detector
+from module.detector.EtsDetector import EtsDetector
+from module.detector.ShesdDetector import ShesdDetector
 from module.reader import read_dataset_1, read_dataset_2, read_dataset_3
 from module.utils import create_directory, display_finish, run_main
 
@@ -16,30 +17,30 @@ from module.utils import create_directory, display_finish, run_main
 
 # VAR ------------------------------------------------------------------------ #
 RESULTS_DIR = "results/"
-ALGORITHM_NAMES: List[str] = ["arima", "ets", "shesd"]
+
+DETECTORS: Dict[str, Detector] = {
+    "arima": ArimaDetector(),
+    "ets": EtsDetector(),
+    "shesd": ShesdDetector()
+}
+
+DATASETS: Dict[str, np.ndarray] = {
+    "dataset_1": read_dataset_1(),
+    "dataset_2": read_dataset_2(),
+    "dataset_3": read_dataset_3(),
+}
 
 
 # MAIN ----------------------------------------------------------------------- #
 def main() -> None:
     args = prepare_args()
-    chosen_algorithm_name = args.algorithm
+    chosen_detector_name = args.detector
     save_stats = args.save
     create_directory(RESULTS_DIR)
 
-    datasets: Dict[str, pd.DataFrame] = {
-        "dataset_1": read_dataset_1(),
-        "dataset_2": read_dataset_2(),
-        "dataset_3": read_dataset_3(),
-    }
-
-    for dataset in datasets:
-        # TODO SET PROPER PARAMS
-        if chosen_algorithm_name == ALGORITHM_NAMES[0]:
-            pred = ARIMA(datasets[dataset].to_numpy(), order=(1, 1, 2)).fit().predict()
-        elif chosen_algorithm_name == ALGORITHM_NAMES[2]:
-            pred = ETSModel(datasets[dataset].to_numpy()).fit().predict()
-        elif chosen_algorithm_name == ALGORITHM_NAMES[2]:
-            anomalies = seasonal_esd(datasets[dataset].to_numpy())
+    detector: Detector = DETECTORS[chosen_detector_name]
+    for dataset in DATASETS:
+        detector.detect(DATASETS[dataset])
 
     display_finish()
 
@@ -49,8 +50,7 @@ def prepare_args() -> Namespace:
     arg_parser = ArgumentParser()
 
     arg_parser.add_argument(
-        "-a", "--algorithm", type=str, choices=ALGORITHM_NAMES,
-        help="Name of algorithm detecting special patterns"
+        "-a", "--detector", type=str, choices=DETECTORS.keys(), help="Name of detector"
     )
     arg_parser.add_argument(
         "-s", "--save", default=False, action="store_true", help="Save charts to files"
