@@ -7,7 +7,7 @@ from module.detector.ArimaDetector import ArimaDetector
 from module.detector.Detector import Detector
 from module.detector.EtsDetector import EtsDetector
 from module.detector.ShesdDetector import ShesdDetector
-from module.reader import read_dataset_1, read_dataset_2, read_dataset_3
+from module.reader import read_air_passengers, read_dataset_2, read_dataset_3
 from module.utils import create_directory, display_finish, run_main
 
 """
@@ -25,7 +25,7 @@ DETECTORS: Dict[str, Detector] = {
 }
 
 DATASETS: Dict[str, np.ndarray] = {
-    "dataset_1": read_dataset_1(),
+    "air_passengers": read_air_passengers(),
     "dataset_2": read_dataset_2(),
     "dataset_3": read_dataset_3(),
 }
