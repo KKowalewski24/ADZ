@@ -7,4 +7,5 @@ from module.detector.Detector import Detector
 class EtsDetector(Detector):
 
     def detect(self, dataset: np.ndarray) -> None:
-        pred = ETSModel(dataset).fit().predict()
+        pred = ETSModel(self.get_dataset_logarithm(dataset)).fit().predict()
+        print(pred)

@@ -2,6 +2,6 @@
 
 set -e
 
-python main.py -s -a arima
-python main.py -s -a ets
-python main.py -s -a shesd
+python main.py -s -d arima
+python main.py -s -d ets
+python main.py -s -d shesd

@@ -12,7 +12,7 @@ from module.utils import create_directory, display_finish, run_main
 
 """
     How to run:
-        python main.py -s -a arima
+        python main.py -s -d arima
 """
 
 # VAR ------------------------------------------------------------------------ #
@@ -53,7 +53,7 @@ def prepare_args() -> Namespace:
     arg_parser = ArgumentParser()
 
     arg_parser.add_argument(
-        "-a", "--detector", type=str, choices=DETECTORS.keys(), help="Name of detector"
+        "-d", "--detector", type=str, choices=DETECTORS.keys(), help="Name of detector"
     )
     arg_parser.add_argument(
         "-s", "--save", default=False, action="store_true", help="Save charts to files"
