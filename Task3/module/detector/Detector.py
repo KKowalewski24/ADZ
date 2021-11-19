@@ -10,5 +10,5 @@ class Detector(ABC):
         pass
 
 
-    def get_dataset_logarithm(self, dataset: np.ndarray) -> None:
+    def get_dataset_logarithm(self, dataset: np.ndarray) -> np.ndarray:
         return np.log(dataset).flatten()
