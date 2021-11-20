@@ -1,12 +1,14 @@
 import numpy as np
 from matplotlib import pyplot as plt
-from sklearn.decomposition import PCA
 
 from module.utils import prepare_filename
 
 
-def draw_plots(name: str, title: str,
+def draw_plots(X: np.ndarray, y: np.ndarray, name: str, title: str,
                results_dir: str, save_data: bool, size=20) -> None:
+    plt.scatter(X[y == 1, 0], X[y == 1, 1], c="k", s=size)
+    plt.scatter(X[y == 0, 0], X[y == 0, 1], s=size)
+
     _set_descriptions(title, "", "")
     _show_and_save(name, results_dir, save_data)
 

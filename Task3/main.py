@@ -2,11 +2,13 @@ from argparse import ArgumentParser, Namespace
 from typing import Dict, Tuple
 
 import numpy as np
+from sklearn.metrics import precision_score, recall_score
 
 from module.detector.ArimaDetector import ArimaDetector
 from module.detector.Detector import Detector
 from module.detector.EtsDetector import EtsDetector
 from module.detector.ShesdDetector import ShesdDetector
+from module.plot import draw_plots
 from module.reader import read_air_passengers, read_dataset_2, read_dataset_3
 from module.utils import create_directory, display_finish, run_main
 
@@ -43,8 +45,13 @@ def main() -> None:
         X, y = DATASETS[dataset]
         outliers = detector.detect(X)
 
-        if save_stats:
-            pass
+        recall = round(recall_score(y, outliers, zero_division=0), 2)
+        precision = round(precision_score(y, outliers, zero_division=0), 2)
+        print(f"Recall {recall} & Precision {precision}")
+
+        name = f"{chosen_detector_name}_{dataset}_"
+        title = name + f"Rcl={recall}_Prec={precision}"
+        draw_plots(X, outliers, name, title, RESULTS_DIR, save_stats)
 
     display_finish()
 

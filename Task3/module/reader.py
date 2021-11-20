@@ -8,7 +8,7 @@ DATASET_DIR: str = "data/"
 
 # https://www.kaggle.com/rakannimer/air-passengers
 def read_air_passengers() -> Tuple[np.ndarray, np.ndarray]:
-    df = pd.read_csv(f"{DATASET_DIR}AirPassengers.csv", parse_dates=["Month"], index_col=["Month"])
+    df = pd.read_csv(f"{DATASET_DIR}AirPassengers.csv", index_col=["Month"])
 
     # Add outliers
     indexes = [4, 6, 7, 39, 40, 50, 52, 79, 91, 92, 105, 110, 117, 136, 137]
