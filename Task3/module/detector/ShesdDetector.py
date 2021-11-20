@@ -6,8 +6,7 @@ from module.detector.Detector import Detector
 
 class ShesdDetector(Detector):
 
-    def detect(self, dataset: np.ndarray) -> None:
+    def detect(self, dataset: np.ndarray) -> np.ndarray:
         dataset_logarithm = self.get_dataset_logarithm(dataset)
-        anomaly_indexes = seasonal_esd(dataset_logarithm)
-        for index in anomaly_indexes:
-            print(f"index: {index}, value: {dataset_logarithm[index]}")
+        outlier_indexes = seasonal_esd(dataset_logarithm)
+        return self.fill_outliers_array(dataset.size, outlier_indexes)
