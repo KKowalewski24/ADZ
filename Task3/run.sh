@@ -1,7 +1,3 @@
 #!/bin/bash
 
-set -e
-
-python main.py -s -d arima
-python main.py -s -d ets
-python main.py -s -d shesd
+python main.py -s -ds air_passengers -d shesd -ap 1

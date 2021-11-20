@@ -14,7 +14,7 @@ from module.utils import create_directory, display_finish, run_main
 
 """
     How to run:
-        python main.py -s -d arima
+        python main.py -s -ds air_passengers -d shesd -ap 1
 """
 
 # VAR ------------------------------------------------------------------------ #
@@ -37,21 +37,22 @@ DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray]] = {
 def main() -> None:
     args = prepare_args()
     chosen_detector_name = args.detector
+    chosen_dataset_name = args.dataset
+    algorithm_params = args.algorithm_params
     save_stats = args.save
     create_directory(RESULTS_DIR)
 
     detector: Detector = DETECTORS[chosen_detector_name]
-    for dataset in DATASETS:
-        X, y = DATASETS[dataset]
-        outliers = detector.detect(X)
+    X, y = DATASETS[chosen_dataset_name]
+    outliers = detector.detect(X)
 
-        recall = round(recall_score(y, outliers, zero_division=0), 2)
-        precision = round(precision_score(y, outliers, zero_division=0), 2)
-        print(f"Recall {recall} & Precision {precision}")
+    recall = round(recall_score(y, outliers, zero_division=0), 2)
+    precision = round(precision_score(y, outliers, zero_division=0), 2)
+    print(f"Recall {recall} & Precision {precision}")
 
-        name = f"{chosen_detector_name}_{dataset}_"
-        title = name + f"Rcl={recall}_Prec={precision}"
-        draw_plots(X, outliers, name, title, RESULTS_DIR, save_stats)
+    name = f"{chosen_detector_name}_{chosen_dataset_name}_"
+    title = name + f"Rcl={recall}_Prec={precision}"
+    draw_plots(X, outliers, name, title, RESULTS_DIR, save_stats)
 
     display_finish()
 
@@ -62,6 +63,13 @@ def prepare_args() -> Namespace:
 
     arg_parser.add_argument(
         "-d", "--detector", type=str, choices=DETECTORS.keys(), help="Name of detector"
+    )
+    arg_parser.add_argument(
+        "-ds", "--dataset", type=str, choices=DATASETS.keys(), help="Name of dataset"
+    )
+    arg_parser.add_argument(
+        "-ap", "--algorithm_params", nargs="+", required=True, type=str,
+        help="List of arguments for certain algorithm"
     )
     arg_parser.add_argument(
         "-s", "--save", default=False, action="store_true", help="Save charts to files"
