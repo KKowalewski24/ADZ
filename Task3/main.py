@@ -1,5 +1,5 @@
 from argparse import ArgumentParser, Namespace
-from typing import Dict
+from typing import Dict, Tuple
 
 import numpy as np
 
@@ -24,7 +24,7 @@ DETECTORS: Dict[str, Detector] = {
     "shesd": ShesdDetector()
 }
 
-DATASETS: Dict[str, np.ndarray] = {
+DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray]] = {
     "air_passengers": read_air_passengers(),
     "dataset_2": read_dataset_2(),
     "dataset_3": read_dataset_3(),
@@ -40,7 +40,8 @@ def main() -> None:
 
     detector: Detector = DETECTORS[chosen_detector_name]
     for dataset in DATASETS:
-        detector.detect(DATASETS[dataset])
+        X, y = DATASETS[dataset]
+        outliers = detector.detect(X)
 
         if save_stats:
             pass

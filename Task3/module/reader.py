@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import numpy as np
 import pandas as pd
 
@@ -5,7 +7,7 @@ DATASET_DIR: str = "data/"
 
 
 # https://www.kaggle.com/rakannimer/air-passengers
-def read_air_passengers() -> np.ndarray:
+def read_air_passengers() -> Tuple[np.ndarray, np.ndarray]:
     df = pd.read_csv(f"{DATASET_DIR}AirPassengers.csv", parse_dates=["Month"], index_col=["Month"])
 
     # Add outliers
@@ -17,14 +19,17 @@ def read_air_passengers() -> np.ndarray:
     for index, value in zip(indexes, values):
         df.iloc[index]["Passengers"] = value
 
-    return df.to_numpy()
+    y = np.zeros(len(df.index))
+    np.put(y, indexes, 1)
+
+    return df.to_numpy(), y
 
 
-def read_dataset_2() -> np.ndarray:
+def read_dataset_2() -> Tuple[np.ndarray, np.ndarray]:
     # TODO ADD IMPL
-    return pd.DataFrame({}).to_numpy()
+    pass
 
 
-def read_dataset_3() -> np.ndarray:
+def read_dataset_3() -> Tuple[np.ndarray, np.ndarray]:
     # TODO ADD IMPL
-    return pd.DataFrame({}).to_numpy()
+    pass
