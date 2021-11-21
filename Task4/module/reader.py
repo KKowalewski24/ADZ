@@ -25,7 +25,7 @@ def read_mammography_dataset() -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.n
     return train_test_split(X, y, test_size=TEST_DATA_PERCENTAGE, random_state=RANDOM_STATE_VALUE)
 
 
-def read_http_dataset() -> Tuple[np.ndarray, np.ndarray]:
+def read_http_dataset() -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     file = h5py.File(f"{DATASET_DIR}http.mat")
     X = np.array(file["X"]).transpose()
     y = np.array(file["y"]).transpose().squeeze().astype(np.int32)
@@ -33,11 +33,13 @@ def read_http_dataset() -> Tuple[np.ndarray, np.ndarray]:
     np.random.seed(47)
     X_normal = _random_samples(X[y == 0], 0.01)
     X_outliers = _random_samples(X[y == 1], 0.02)
-    return (
-        np.concatenate([X_normal, X_outliers]),
-        np.concatenate([np.zeros((len(X_normal),)), np.zeros((len(X_outliers),)) - 1]).astype(
-            np.int32)
-    )
+
+    X = np.concatenate([X_normal, X_outliers])
+    y = np.concatenate(
+        [np.zeros((len(X_normal),)), np.zeros((len(X_outliers),)) - 1]
+    ).astype(np.int32)
+
+    return train_test_split(X, y, test_size=TEST_DATA_PERCENTAGE, random_state=RANDOM_STATE_VALUE)
 
 
 def _random_samples(X, fraction):

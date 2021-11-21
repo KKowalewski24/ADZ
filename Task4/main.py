@@ -10,7 +10,7 @@ from module.utils import create_directory, display_finish, run_main
 
 """
     How to run: 
-        python main.py -s -a abod
+        python main.py -s -ds synthetic -d abod -ap 1
 """
 
 # VAR ------------------------------------------------------------------------ #
@@ -36,9 +36,9 @@ def main() -> None:
     save_results = args.save
     create_directory(RESULTS_DIR)
 
-    dataset = DATASETS[chosen_dataset_name]
     detector = DETECTORS[chosen_detector_name]
-    detector.detect(dataset)
+    detector.detect(DATASETS[chosen_dataset_name])
+    detector.show_results(save_results)
 
     display_finish()
 
