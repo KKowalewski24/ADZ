@@ -5,7 +5,7 @@ import numpy as np
 
 from module.detector.AbodDetector import AbodDetector
 from module.detector.Detector import Detector
-from module.reader import read_dataset_1, read_dataset_2, read_dataset_3
+from module.reader import read_http_dataset, read_mammography_dataset, read_synthetic_dataset
 from module.utils import create_directory, display_finish, run_main
 
 """
@@ -21,9 +21,9 @@ DETECTORS: Dict[str, Detector] = {
 }
 
 DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]] = {
-    "dataset_1": read_dataset_1(),
-    "dataset_2": read_dataset_2(),
-    "dataset_3": read_dataset_3(),
+    "http": read_http_dataset(),
+    "mammography": read_mammography_dataset(),
+    "synthetic": read_synthetic_dataset(),
 }
 
 

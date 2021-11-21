@@ -1,7 +1,9 @@
-from typing import Callable, Tuple
+from typing import Tuple
 
+import h5py
 import numpy as np
-import pandas as pd
+from pyod.utils.data import generate_data
+from scipy.io import loadmat
 from sklearn.model_selection import train_test_split
 
 DATASET_DIR: str = "data/"
@@ -9,24 +11,34 @@ TEST_DATA_PERCENTAGE = 0.3
 RANDOM_STATE_VALUE = 21
 
 
-def read_dataset_1() -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    # TODO
-    return _read_and_split("", lambda df: (df.iloc[:, :-1], df.iloc[:, -1]))
+def read_synthetic_dataset() -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    return generate_data(
+        n_train=200, n_test=100, n_features=2,
+        contamination=0.1, random_state=RANDOM_STATE_VALUE, behaviour="new"
+    )
 
 
-def read_dataset_2() -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    # TODO
-    return _read_and_split("", lambda df: (df.iloc[:, :-1], df.iloc[:, -1]))
-
-
-def read_dataset_3() -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    # TODO
-    return _read_and_split("", lambda df: (df.iloc[:, :-1], df.iloc[:, -1]))
-
-
-def _read_and_split(
-        filename: str, callback: Callable[[pd.DataFrame], Tuple[np.ndarray, np.ndarray]]
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    df = pd.read_csv(DATASET_DIR + filename)
-    X, y = callback(df)
+def read_mammography_dataset() -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    file = loadmat(f"{DATASET_DIR}mammography.mat")
+    X = file["X"]
+    y = file["y"].squeeze().astype(np.int32)
     return train_test_split(X, y, test_size=TEST_DATA_PERCENTAGE, random_state=RANDOM_STATE_VALUE)
+
+
+def read_http_dataset() -> Tuple[np.ndarray, np.ndarray]:
+    file = h5py.File(f"{DATASET_DIR}http.mat")
+    X = np.array(file["X"]).transpose()
+    y = np.array(file["y"]).transpose().squeeze().astype(np.int32)
+
+    np.random.seed(47)
+    X_normal = _random_samples(X[y == 0], 0.01)
+    X_outliers = _random_samples(X[y == 1], 0.02)
+    return (
+        np.concatenate([X_normal, X_outliers]),
+        np.concatenate([np.zeros((len(X_normal),)), np.zeros((len(X_outliers),)) - 1]).astype(
+            np.int32)
+    )
+
+
+def _random_samples(X, fraction):
+    return X[np.random.randint(len(X), size=(int(fraction * len(X)),))]
