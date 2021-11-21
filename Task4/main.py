@@ -14,8 +14,6 @@ from module.utils import create_directory, display_finish, run_main
 """
 
 # VAR ------------------------------------------------------------------------ #
-RESULTS_DIR = "results/"
-
 DETECTORS: Dict[str, Detector] = {
     "abod": AbodDetector(),
 }
@@ -34,7 +32,7 @@ def main() -> None:
     chosen_dataset_name = args.dataset
     algorithm_params = args.algorithm_params
     save_results = args.save
-    create_directory(RESULTS_DIR)
+    create_directory(Detector.RESULTS_DIR)
 
     detector = DETECTORS[chosen_detector_name]
     detector.detect(DATASETS[chosen_dataset_name])

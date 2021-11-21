@@ -2,7 +2,6 @@ from typing import Tuple
 
 import numpy as np
 from pyod.models.abod import ABOD
-from pyod.utils.example import visualize
 
 from module.detector.Detector import Detector
 
@@ -20,11 +19,3 @@ class AbodDetector(Detector):
 
         self.y_test_pred = abod.predict(self.X_test)
         self.y_test_scores = abod.decision_function(self.X_test)
-
-
-    def show_results(self, save_results: bool) -> None:
-        visualize(
-            type(self).__name__, self.X_train, self.y_train, self.X_test, self.y_test,
-            self.y_train_pred, self.y_test_pred, show_figure=not save_results,
-            save_figure=save_results
-        )
