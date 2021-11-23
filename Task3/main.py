@@ -9,7 +9,7 @@ from module.detector.Detector import Detector
 from module.detector.EtsDetector import EtsDetector
 from module.detector.ShesdDetector import ShesdDetector
 from module.plot import draw_plots
-from module.reader import read_air_passengers, read_dataset_2, read_dataset_3
+from module.reader import read_air_passengers, read_env_telemetry, read_weather_aus
 from module.utils import create_directory, display_finish, run_main
 
 """
@@ -21,15 +21,15 @@ from module.utils import create_directory, display_finish, run_main
 RESULTS_DIR = "results/"
 
 DETECTORS: Dict[str, Detector] = {
+    "shesd": ShesdDetector(),
     "arima": ArimaDetector(),
     "ets": EtsDetector(),
-    "shesd": ShesdDetector()
 }
 
 DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray]] = {
     "air_passengers": read_air_passengers(),
-    "dataset_2": read_dataset_2(),
-    "dataset_3": read_dataset_3(),
+    "env_telemetry": read_env_telemetry(),
+    "weather_aus": read_weather_aus(),
 }
 
 

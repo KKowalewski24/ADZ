@@ -1,7 +1,9 @@
-from typing import Tuple
+import os
+from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
+from sklearn.preprocessing import LabelEncoder
 
 DATASET_DIR: str = "data/"
 
@@ -25,11 +27,37 @@ def read_air_passengers() -> Tuple[np.ndarray, np.ndarray]:
     return df.to_numpy(), y
 
 
-def read_dataset_2() -> Tuple[np.ndarray, np.ndarray]:
-    # TODO ADD IMPL
-    pass
+# https://www.kaggle.com/garystafford/environmental-sensor-data-132k
+def read_env_telemetry() -> Tuple[np.ndarray, np.ndarray]:
+    path = f"{DATASET_DIR}iot_telemetry_data.csv"
+    path_preprocessing = _add_suffix(path)
+
+    if not os.path.exists(path):
+        df = pd.read_csv(path, nrows=2000)
+        df.drop(columns=["device"], inplace=True)
+        df["ts"] = df["ts"].astype(str)
+        _encode_labels(df, ["light", "motion"])
+        df.to_csv(path_preprocessing, index=False)
 
 
-def read_dataset_3() -> Tuple[np.ndarray, np.ndarray]:
-    # TODO ADD IMPL
-    pass
+# https://www.kaggle.com/jsphyg/weather-dataset-rattle-package
+def read_weather_aus() -> Tuple[np.ndarray, np.ndarray]:
+    path = f"{DATASET_DIR}weatherAUS.csv"
+    path_preprocessing = _add_suffix(path)
+
+    if not os.path.exists(path):
+        df = pd.read_csv(path, nrows=2000)
+        _encode_labels(df, [])
+        df.to_csv(path_preprocessing, index=False)
+
+
+def _encode_labels(df: pd.DataFrame, column_names: List[str]) -> pd.DataFrame:
+    label_encoder = LabelEncoder()
+    for column_name in column_names:
+        df[column_name] = label_encoder.fit_transform(df[column_name])
+
+    return df
+
+
+def _add_suffix(path: str) -> str:
+    return path.replace(".csv", "_preprocessed.csv")
