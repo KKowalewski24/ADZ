@@ -10,7 +10,16 @@ DATASET_DIR: str = "data/"
 
 # https://www.kaggle.com/rakannimer/air-passengers
 def read_air_passengers() -> Tuple[np.ndarray, np.ndarray]:
-    df = pd.read_csv(f"{DATASET_DIR}AirPassengers.csv", index_col=["Month"])
+    path = f"{DATASET_DIR}AirPassengers.csv"
+    path_preprocessing = _add_suffix(path)
+
+    if not os.path.exists(path_preprocessing):
+        df = pd.read_csv(path)
+        # TODO Consider converting year and month to timestamp
+        # df["Month"] = datetime.timestamp(df["Month"])
+        df.to_csv(path_preprocessing, index=False)
+
+    df = pd.read_csv(path_preprocessing, index_col=["Month"])
 
     # Add outliers
     indexes = [4, 6, 7, 39, 40, 50, 52, 79, 91, 92, 105, 110, 117, 136, 137]
@@ -21,10 +30,7 @@ def read_air_passengers() -> Tuple[np.ndarray, np.ndarray]:
     for index, value in zip(indexes, values):
         df.iloc[index]["Passengers"] = value
 
-    y = np.zeros(len(df.index))
-    np.put(y, indexes, 1)
-
-    return df.to_numpy(), y
+    return df.to_numpy(), _get_ground_truth_array(df, indexes)
 
 
 # https://www.kaggle.com/garystafford/environmental-sensor-data-132k
@@ -32,12 +38,17 @@ def read_env_telemetry() -> Tuple[np.ndarray, np.ndarray]:
     path = f"{DATASET_DIR}iot_telemetry_data.csv"
     path_preprocessing = _add_suffix(path)
 
-    if not os.path.exists(path):
+    if not os.path.exists(path_preprocessing):
         df = pd.read_csv(path, nrows=2000)
         df.drop(columns=["device"], inplace=True)
         df["ts"] = df["ts"].astype(str)
         _encode_labels(df, ["light", "motion"])
         df.to_csv(path_preprocessing, index=False)
+
+    df = pd.read_csv(path_preprocessing)
+    indexes = []
+
+    return df.to_numpy(), _get_ground_truth_array(df, indexes)
 
 
 # https://www.kaggle.com/jsphyg/weather-dataset-rattle-package
@@ -45,10 +56,23 @@ def read_weather_aus() -> Tuple[np.ndarray, np.ndarray]:
     path = f"{DATASET_DIR}weatherAUS.csv"
     path_preprocessing = _add_suffix(path)
 
-    if not os.path.exists(path):
+    if not os.path.exists(path_preprocessing):
         df = pd.read_csv(path, nrows=2000)
-        _encode_labels(df, [])
+        _encode_labels(
+            df, ["Location", "WindGustDir", "WindDir9am", "WindDir3pm", "RainToday", "RainTomorrow"]
+        )
         df.to_csv(path_preprocessing, index=False)
+
+    df = pd.read_csv(path_preprocessing)
+    indexes = []
+
+    return df.to_numpy(), _get_ground_truth_array(df, indexes)
+
+
+def _get_ground_truth_array(df: pd.DataFrame, indexes: List[int]) -> np.ndarray:
+    y = np.zeros(len(df.index))
+    np.put(y, indexes, 1)
+    return y
 
 
 def _encode_labels(df: pd.DataFrame, column_names: List[str]) -> pd.DataFrame:
