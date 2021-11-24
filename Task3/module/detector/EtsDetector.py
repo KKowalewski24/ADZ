@@ -31,6 +31,7 @@ class EtsDetector(Detector):
 
 
     def show_results(self, results_dir: str, save_data: bool) -> None:
+        plt.figure(figsize=(10, 6))
         plt.plot(self.dataset)
         plt.plot(self.ets_model.fittedvalues)
         plt.legend()

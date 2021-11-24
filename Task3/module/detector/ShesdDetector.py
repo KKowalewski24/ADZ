@@ -37,6 +37,7 @@ class ShesdDetector(Detector):
 
 
     def show_results(self, results_dir: str, save_data: bool) -> None:
+        plt.figure(figsize=(10, 6))
         plt.scatter(
             self.dataset[self.outliers == 1, 0], self.dataset[self.outliers == 1, 1], c="k", s=20
         )
