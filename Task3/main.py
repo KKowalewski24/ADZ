@@ -47,7 +47,8 @@ def main() -> None:
     X, y = DATASETS[chosen_dataset_name]
     detector: Detector = DETECTORS[chosen_detector_name](X, y, configuration_name)
     detector.detect()
-    print(detector.calculate_statistics())
+    statistics = detector.calculate_statistics()
+    print(" ".join([stat + " & " + str(statistics[stat]) for stat in statistics]))
     detector.show_results(RESULTS_DIR, save_stats)
 
     display_finish()
