@@ -1,14 +1,12 @@
 from argparse import ArgumentParser, Namespace
-from typing import Dict, Tuple
+from typing import Any, Dict, Tuple
 
 import numpy as np
-from sklearn.metrics import precision_score, recall_score
 
 from module.detector.ArimaDetector import ArimaDetector
 from module.detector.Detector import Detector
 from module.detector.EtsDetector import EtsDetector
 from module.detector.ShesdDetector import ShesdDetector
-from module.plot import draw_plots
 from module.reader import read_air_passengers, read_env_telemetry, read_weather_aus
 from module.utils import create_directory, display_finish, run_main
 
@@ -20,10 +18,10 @@ from module.utils import create_directory, display_finish, run_main
 # VAR ------------------------------------------------------------------------ #
 RESULTS_DIR = "results/"
 
-DETECTORS: Dict[str, Detector] = {
-    "shesd": ShesdDetector(),
-    "arima": ArimaDetector(),
-    "ets": EtsDetector(),
+DETECTORS: Dict[str, Any] = {
+    "shesd": ShesdDetector,
+    "arima": ArimaDetector,
+    "ets": EtsDetector,
 }
 
 DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray]] = {
@@ -42,17 +40,15 @@ def main() -> None:
     save_stats = args.save
     create_directory(RESULTS_DIR)
 
-    detector: Detector = DETECTORS[chosen_detector_name]
+    configuration_name = (
+        f"{chosen_dataset_name}_{chosen_detector_name}_"
+        f"{'_'.join([str(param).replace('.', ',') for param in algorithm_params])}_"
+    )
     X, y = DATASETS[chosen_dataset_name]
-    outliers = detector.detect(X)
-
-    recall = round(recall_score(y, outliers, zero_division=0), 2)
-    precision = round(precision_score(y, outliers, zero_division=0), 2)
-    print(f"Recall {recall} & Precision {precision}")
-
-    name = f"{chosen_detector_name}_{chosen_dataset_name}_"
-    title = name + f"Rcl={recall}_Prec={precision}"
-    draw_plots(X, outliers, name, title, RESULTS_DIR, save_stats)
+    detector: Detector = DETECTORS[chosen_detector_name](X, y, configuration_name)
+    detector.detect()
+    print(detector.calculate_statistics())
+    detector.show_results(RESULTS_DIR, save_stats)
 
     display_finish()
 
