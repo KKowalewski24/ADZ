@@ -29,8 +29,8 @@ class ShesdDetector(Detector):
         ), 2)
 
         self.statistics = {
-            recall.__name__: recall,
-            precision.__name__: precision
+            "recall": recall,
+            "precision": precision
         }
 
         return self.statistics
