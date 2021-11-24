@@ -1,10 +1,10 @@
-from typing import Dict
+from typing import Any, Dict
 
+import matplotlib.pyplot as plt
 import numpy as np
-from statsmodels.tsa.exponential_smoothing.ets import ETSModel, ETSResults
+from statsmodels.tsa.exponential_smoothing.ets import ETSModel
 
 from module.detector.Detector import Detector
-import matplotlib.pyplot as plt
 
 
 class EtsDetector(Detector):
@@ -15,9 +15,9 @@ class EtsDetector(Detector):
         self.ets_model = None
 
 
-    def detect(self) -> None:
+    def detect(self, params: Dict[str, Any]) -> None:
         dataset_logarithm = self._calculate_dataset_logarithm()
-        self.ets_model = ETSModel(dataset_logarithm).fit()
+        self.ets_model = ETSModel(dataset_logarithm, **params).fit()
 
 
     def calculate_statistics(self) -> Dict[str, float]:

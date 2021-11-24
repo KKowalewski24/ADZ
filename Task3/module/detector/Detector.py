@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict, List
+from typing import Any, Dict, List
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -18,7 +18,7 @@ class Detector(ABC):
 
 
     @abstractmethod
-    def detect(self) -> None:
+    def detect(self, params: Dict[str, Any]) -> None:
         pass
 
 

@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Any
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -16,9 +16,9 @@ class ShesdDetector(Detector):
         self.outliers: np.ndarray = np.ndarray([])
 
 
-    def detect(self) -> None:
+    def detect(self, params: Dict[str, Any]) -> None:
         dataset_logarithm = self._calculate_dataset_logarithm()
-        outlier_indexes = seasonal_esd(dataset_logarithm)
+        outlier_indexes = seasonal_esd(dataset_logarithm, **params)
         self.outliers = self._fill_outliers_array(self.dataset.size, outlier_indexes)
 
 

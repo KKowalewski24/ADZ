@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Any, Dict
 
 from statsmodels.tsa.arima.model import ARIMA
 
@@ -7,9 +7,9 @@ from module.detector.Detector import Detector
 
 class ArimaDetector(Detector):
 
-    def detect(self) -> None:
+    def detect(self, params: Dict[str, Any]) -> None:
         dataset_logarithm = self._calculate_dataset_logarithm()
-        pred = ARIMA(dataset_logarithm, order=(2, 1, 2)).fit().predict()
+        pred = ARIMA(dataset_logarithm, **params).fit().predict()
         print(pred)
 
 

@@ -1,5 +1,5 @@
 from argparse import ArgumentParser, Namespace
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Tuple, List
 
 import numpy as np
 
@@ -18,10 +18,10 @@ from module.utils import create_directory, display_finish, run_main
 # VAR ------------------------------------------------------------------------ #
 RESULTS_DIR = "results/"
 
-DETECTORS: Dict[str, Any] = {
-    "shesd": ShesdDetector,
-    "arima": ArimaDetector,
-    "ets": EtsDetector,
+DETECTORS: Dict[str, Tuple[Any, List[Dict[str, Any]]]] = {
+    "shesd": (ShesdDetector, [{}]),
+    "arima": (ArimaDetector, [{}]),
+    "ets": (EtsDetector, [{}]),
 }
 
 DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray]] = {
@@ -40,16 +40,17 @@ def main() -> None:
     save_stats = args.save
     create_directory(RESULTS_DIR)
 
-    configuration_name = (
-        f"{chosen_dataset_name}_{chosen_detector_name}_"
-        f"{'_'.join([str(param).replace('.', ',') for param in algorithm_params])}_"
-    )
-    X, y = DATASETS[chosen_dataset_name]
-    detector: Detector = DETECTORS[chosen_detector_name](X, y, configuration_name)
-    detector.detect()
-    statistics = detector.calculate_statistics()
-    print(" ".join([stat + " & " + str(statistics[stat]) for stat in statistics]))
-    detector.show_results(RESULTS_DIR, save_stats)
+    for params in DETECTORS[chosen_detector_name][1]:
+        configuration_name = (
+            f"{chosen_dataset_name}_{chosen_detector_name}_"
+            f"{'_'.join([str(param).replace('.', ',') for param in params])}_"
+        )
+        X, y = DATASETS[chosen_dataset_name]
+        detector: Detector = DETECTORS[chosen_detector_name][0](X, y, configuration_name)
+        detector.detect(params)
+        statistics = detector.calculate_statistics()
+        print(" ".join([stat + " & " + str(statistics[stat]) for stat in statistics]))
+        detector.show_results(RESULTS_DIR, save_stats)
 
     display_finish()
 
