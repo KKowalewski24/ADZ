@@ -18,7 +18,7 @@ class ShesdDetector(Detector):
 
 
     def detect(self, params: Dict[str, Any]) -> None:
-        outlier_indexes = seasonal_esd(self.dataset.flatten(), **params)
+        outlier_indexes = seasonal_esd(self.dataset.to_numpy().flatten(), **params)
         self.outliers = self._fill_outliers_array(self.dataset.size, outlier_indexes)
 
 
@@ -37,12 +37,16 @@ class ShesdDetector(Detector):
 
 
     def show_results(self, results_dir: str, save_data: bool) -> None:
+        print(self.dataset.to_numpy().flatten())
         plt.figure(figsize=(10, 6))
-        plt.scatter(
-            self.dataset[self.outliers == 1, 0], self.dataset[self.outliers == 1, 1], c="k", s=20
-        )
-        plt.scatter(
-            self.dataset[self.outliers == 0, 0], self.dataset[self.outliers == 0, 1], s=20
+        # plt.plot(
+        #     self.dataset.to_numpy()[self.outliers == 1, 0], c="k",
+        # )
+        for outlier in self.outliers:
+            plt.axvline(outlier, alpha=1.0, color="red", linewidth=4)
+
+        plt.plot(
+            self.dataset.to_numpy(),
         )
 
         self._set_descriptions(self.configuration_name + self._statistics_to_string(), "", "")

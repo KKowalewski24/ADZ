@@ -26,7 +26,7 @@ def read_oil() -> Tuple[pd.DataFrame, np.ndarray]:
     for index, value in zip(indexes, values):
         oil_data[index] = value
 
-    df = pd.Series(oil_data, index=pd.date_range("1965", "2013", freq="AS")).to_frame()
+    df = pd.DataFrame(oil_data, pd.date_range("1965", "2013", freq="AS"))
     return df, _get_ground_truth_array(df, indexes)
 
 
