@@ -3,6 +3,7 @@ from typing import Any, Dict, Tuple
 
 import numpy as np
 from pyod.utils.example import visualize
+from sklearn.decomposition import PCA
 
 from module.utils import prepare_filename
 
@@ -27,8 +28,11 @@ class Detector(ABC):
 
 
     def show_results(self, save_results: bool) -> None:
+        pca = PCA(n_components=2)
         visualize(
             prepare_filename(Detector.RESULTS_DIR + self.configuration_name),
-            self.X_train, self.y_train, self.X_test, self.y_test, self.y_train_pred,
-            self.y_test_pred, show_figure=not save_results, save_figure=save_results
+            pca.fit_transform(self.X_train), self.y_train,
+            pca.fit_transform(self.X_test), self.y_test,
+            self.y_train_pred, self.y_test_pred,
+            show_figure=not save_results, save_figure=save_results
         )
