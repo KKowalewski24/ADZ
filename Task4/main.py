@@ -3,19 +3,19 @@ from typing import Dict, Tuple, List, Any
 
 import numpy as np
 
-from module.detector.AbodDetector import AbodDetector
+from module.detector.FastAbodDetector import FastAbodDetector
 from module.detector.Detector import Detector
 from module.reader import read_http_dataset, read_mammography_dataset, read_synthetic_dataset
 from module.utils import create_directory, display_finish, run_main
 
 """
     How to run: 
-        python main.py -s -ds synthetic -d abod
+        python main.py -s -ds synthetic -d fast_abod
 """
 
 # VAR ------------------------------------------------------------------------ #
 DETECTORS: Dict[str, Any] = {
-    "abod": AbodDetector,
+    "fast_abod": FastAbodDetector,
 }
 
 DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]] = {
@@ -25,9 +25,9 @@ DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]] = {
 }
 
 EXPERIMENTS: List[Tuple[str, str, List[Dict[str, Any]]]] = [
-    ("abod", "http", [{}]),
-    ("abod", "mammography", [{}]),
-    ("abod", "synthetic", [{}]),
+    ("fast_abod", "http", [{}]),
+    ("fast_abod", "mammography", [{}]),
+    ("fast_abod", "synthetic", [{}]),
 ]
 
 

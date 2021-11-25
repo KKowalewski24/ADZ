@@ -5,9 +5,10 @@ from pyod.models.abod import ABOD
 from module.detector.Detector import Detector
 
 
-class AbodDetector(Detector):
+class FastAbodDetector(Detector):
 
     def detect(self, params: Dict[str, Any]) -> None:
+        # Default param for ABOD is method="fast"
         abod = ABOD(**params)
         abod.fit(self.X_train)
 
