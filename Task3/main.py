@@ -57,7 +57,7 @@ def main() -> None:
     for params in params_list:
         configuration_name = (
             f"{chosen_dataset_name}_{chosen_detector_name}_"
-            f"{'_'.join([str(param).replace('.', ',') for param in params])}"
+            f"{'_'.join([param + '=' + str(params[param]).replace('.', ',') for param in params])}"
         )
         X, y = DATASETS[chosen_dataset_name]
         detector: Detector = DETECTORS[chosen_detector_name](X, y, configuration_name)
