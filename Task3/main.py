@@ -2,16 +2,17 @@ from argparse import ArgumentParser, Namespace
 from typing import Any, Dict, List, Tuple
 
 import numpy as np
+import pandas as pd
 
 from module.detector.Detector import Detector
 from module.detector.EtsDetector import EtsDetector
 from module.detector.ShesdDetector import ShesdDetector
-from module.reader import read_air_passengers, read_env_telemetry, read_weather_aus
+from module.reader import read_env_telemetry, read_oil, read_weather_aus
 from module.utils import create_directory, display_finish, run_main
 
 """
     How to run:
-        python main.py -s -d shesd -ds air_passengers
+        python main.py -s -d shesd -ds oil
 """
 
 # VAR ------------------------------------------------------------------------ #
@@ -22,18 +23,18 @@ DETECTORS: Dict[str, Any] = {
     "ets": EtsDetector,
 }
 
-DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray]] = {
-    "air_passengers": read_air_passengers(),
+DATASETS: Dict[str, Tuple[pd.DataFrame, np.ndarray]] = {
+    "oil": read_oil(),
     "env_telemetry": read_env_telemetry(),
     "weather_aus": read_weather_aus(),
 }
 
 EXPERIMENTS: List[Tuple[str, str, List[Dict[str, Any]]]] = [
-    ("shesd", "air_passengers", [{}]),
+    ("shesd", "oil", [{}]),
     ("shesd", "env_telemetry", [{}]),
     ("shesd", "weather_aus", [{}]),
 
-    ("ets", "air_passengers", [{}]),
+    ("ets", "oil", [{}]),
     ("ets", "env_telemetry", [{}]),
     ("ets", "weather_aus", [{}]),
 ]

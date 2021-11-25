@@ -1,6 +1,7 @@
-from typing import Dict, Any
+from typing import Any, Dict
 
 import numpy as np
+import pandas as pd
 from matplotlib import pyplot as plt
 from sesd import seasonal_esd
 from sklearn.metrics import precision_score, recall_score
@@ -10,15 +11,14 @@ from module.detector.Detector import Detector
 
 class ShesdDetector(Detector):
 
-    def __init__(self, dataset: np.ndarray, ground_truth_outliers: np.ndarray,
+    def __init__(self, dataset: pd.DataFrame, ground_truth_outliers: np.ndarray,
                  configuration_name: str) -> None:
         super().__init__(dataset, ground_truth_outliers, configuration_name)
         self.outliers: np.ndarray = np.ndarray([])
 
 
     def detect(self, params: Dict[str, Any]) -> None:
-        dataset_logarithm = self._calculate_dataset_logarithm()
-        outlier_indexes = seasonal_esd(dataset_logarithm, **params)
+        outlier_indexes = seasonal_esd(self.dataset.flatten(), **params)
         self.outliers = self._fill_outliers_array(self.dataset.size, outlier_indexes)
 
 

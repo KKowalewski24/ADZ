@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Dict, List
 
 import numpy as np
+import pandas as pd
 from matplotlib import pyplot as plt
 
 from module.utils import prepare_filename
@@ -9,7 +10,7 @@ from module.utils import prepare_filename
 
 class Detector(ABC):
 
-    def __init__(self, dataset: np.ndarray, ground_truth_outliers: np.ndarray,
+    def __init__(self, dataset: pd.DataFrame, ground_truth_outliers: np.ndarray,
                  configuration_name: str) -> None:
         self.dataset = dataset
         self.ground_truth_outliers = ground_truth_outliers
@@ -20,10 +21,6 @@ class Detector(ABC):
     @abstractmethod
     def detect(self, params: Dict[str, Any]) -> None:
         pass
-
-
-    def _calculate_dataset_logarithm(self) -> np.ndarray:
-        return np.log(self.dataset).flatten()
 
 
     def _fill_outliers_array(self, dataset_size: int, indexes: List[int]) -> np.ndarray:
