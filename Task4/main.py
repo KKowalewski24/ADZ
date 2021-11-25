@@ -27,7 +27,12 @@ DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]] = {
 EXPERIMENTS: List[Tuple[str, str, List[Dict[str, Any]]]] = [
     ("fast_abod", "http", [{}]),
     ("fast_abod", "mammography", [{}]),
-    ("fast_abod", "synthetic", [{}]),
+    ("fast_abod", "synthetic", [
+        {"contamination": 0.1, "n_neighbors": 5},
+        {"contamination": 0.1, "n_neighbors": 25},
+        {"contamination": 0.5, "n_neighbors": 5},
+        {"contamination": 0.05, "n_neighbors": 5},
+    ]),
 ]
 
 
@@ -49,7 +54,7 @@ def main() -> None:
     for params in params_list:
         configuration_name = (
             f"{chosen_dataset_name}_{chosen_detector_name}_"
-            f"{'_'.join([str(param).replace('.', ',') for param in params])}"
+            f"{'_'.join([param + '=' + str(params[param]).replace('.', ',') for param in params])}"
         )
         detector = DETECTORS[chosen_detector_name](dataset, configuration_name)
         detector.detect(params)
