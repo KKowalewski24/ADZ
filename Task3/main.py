@@ -3,7 +3,6 @@ from typing import Any, Dict, List, Tuple
 
 import numpy as np
 
-from module.detector.ArimaDetector import ArimaDetector
 from module.detector.Detector import Detector
 from module.detector.EtsDetector import EtsDetector
 from module.detector.ShesdDetector import ShesdDetector
@@ -20,7 +19,6 @@ RESULTS_DIR = "results/"
 
 DETECTORS: Dict[str, Any] = {
     "shesd": ShesdDetector,
-    "arima": ArimaDetector,
     "ets": EtsDetector,
 }
 
@@ -34,10 +32,6 @@ EXPERIMENTS: List[Tuple[str, str, List[Dict[str, Any]]]] = [
     ("shesd", "air_passengers", [{}]),
     ("shesd", "env_telemetry", [{}]),
     ("shesd", "weather_aus", [{}]),
-
-    ("arima", "air_passengers", [{}]),
-    ("arima", "env_telemetry", [{}]),
-    ("arima", "weather_aus", [{}]),
 
     ("ets", "air_passengers", [{}]),
     ("ets", "env_telemetry", [{}]),
