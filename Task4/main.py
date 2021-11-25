@@ -25,8 +25,18 @@ DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]] = {
 }
 
 EXPERIMENTS: List[Tuple[str, str, List[Dict[str, Any]]]] = [
-    ("fast_abod", "http", [{}]),
-    ("fast_abod", "mammography", [{}]),
+    ("fast_abod", "http", [
+        {"contamination": 0.1, "n_neighbors": 5},
+        {"contamination": 0.1, "n_neighbors": 25},
+        {"contamination": 0.5, "n_neighbors": 5},
+        {"contamination": 0.05, "n_neighbors": 5},
+    ]),
+    ("fast_abod", "mammography", [
+        {"contamination": 0.1, "n_neighbors": 5},
+        {"contamination": 0.1, "n_neighbors": 25},
+        {"contamination": 0.5, "n_neighbors": 5},
+        {"contamination": 0.05, "n_neighbors": 5},
+    ]),
     ("fast_abod", "synthetic", [
         {"contamination": 0.1, "n_neighbors": 5},
         {"contamination": 0.1, "n_neighbors": 25},
