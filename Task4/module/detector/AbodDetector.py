@@ -1,6 +1,5 @@
-from typing import Tuple
+from typing import Any, Dict
 
-import numpy as np
 from pyod.models.abod import ABOD
 
 from module.detector.Detector import Detector
@@ -8,10 +7,8 @@ from module.detector.Detector import Detector
 
 class AbodDetector(Detector):
 
-    def detect(self, dataset: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]) -> None:
-        self.X_train, self.X_test, self.y_train, self.y_test = dataset
-
-        abod = ABOD()
+    def detect(self, params: Dict[str, Any]) -> None:
+        abod = ABOD(**params)
         abod.fit(self.X_train)
 
         self.y_train_pred = abod.labels_
