@@ -7,12 +7,12 @@ import pandas as pd
 from module.detector.Detector import Detector
 from module.detector.EtsDetector import EtsDetector
 from module.detector.ShesdDetector import ShesdDetector
-from module.reader import read_env_telemetry, read_oil, read_weather_aus
+from module.reader import read_air_passengers, read_alcohol_sales, read_gold_price
 from module.utils import create_directory, display_finish, run_main
 
 """
     How to run:
-        python main.py -s -d shesd -ds oil
+        python main.py -s -d shesd -ds air_passengers
 """
 
 # VAR ------------------------------------------------------------------------ #
@@ -24,19 +24,19 @@ DETECTORS: Dict[str, Any] = {
 }
 
 DATASETS: Dict[str, Tuple[pd.DataFrame, np.ndarray]] = {
-    "oil": read_oil(),
-    "env_telemetry": read_env_telemetry(),
-    "weather_aus": read_weather_aus(),
+    "air_passengers": read_air_passengers(),
+    "alcohol_sales": read_alcohol_sales(),
+    "gold_price": read_gold_price(),
 }
 
 EXPERIMENTS: List[Tuple[str, str, List[Dict[str, Any]]]] = [
-    ("shesd", "oil", [{}]),
-    ("shesd", "env_telemetry", [{}]),
-    ("shesd", "weather_aus", [{}]),
+    ("shesd", "air_passengers", [{}]),
+    ("shesd", "alcohol_sales", [{}]),
+    ("shesd", "gold_price", [{}]),
 
-    ("ets", "oil", [{}]),
-    ("ets", "env_telemetry", [{}]),
-    ("ets", "weather_aus", [{}]),
+    ("ets", "air_passengers", [{}]),
+    ("ets", "alcohol_sales", [{}]),
+    ("ets", "gold_price", [{}]),
 ]
 
 
