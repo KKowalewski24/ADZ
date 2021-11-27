@@ -30,9 +30,63 @@ DATASETS: Dict[str, Tuple[pd.DataFrame, np.ndarray]] = {
 }
 
 EXPERIMENTS: List[Tuple[str, str, List[Dict[str, Any]]]] = [
-    ("shesd", "air_passengers", [{}]),
-    ("shesd", "alcohol_sales", [{}]),
-    ("shesd", "gold_price", [{}]),
+    ("shesd", "air_passengers", [
+        {"periodicity": None, "max_anomalies": 10, "alpha": 0.05},
+        {
+            "periodicity": int(0.1 * len(DATASETS["air_passengers"][0])),
+            "max_anomalies": 10,
+            "alpha": 0.05
+        },
+        {
+            "periodicity": int(0.5 * len(DATASETS["air_passengers"][0])),
+            "max_anomalies": 10,
+            "alpha": 0.05
+        },
+
+        {"periodicity": None, "max_anomalies": 100, "alpha": 0.05},
+        {"periodicity": None, "max_anomalies": 5, "alpha": 0.05},
+
+        {"periodicity": None, "max_anomalies": 10, "alpha": 0.01},
+        {"periodicity": None, "max_anomalies": 10, "alpha": 0.1},
+    ]),
+    ("shesd", "alcohol_sales", [
+        {"periodicity": None, "max_anomalies": 10, "alpha": 0.05},
+        {
+            "periodicity": int(0.1 * len(DATASETS["alcohol_sales"][0])),
+            "max_anomalies": 10,
+            "alpha": 0.05
+        },
+        {
+            "periodicity": int(0.5 * len(DATASETS["alcohol_sales"][0])),
+            "max_anomalies": 10,
+            "alpha": 0.05
+        },
+
+        {"periodicity": None, "max_anomalies": 100, "alpha": 0.05},
+        {"periodicity": None, "max_anomalies": 5, "alpha": 0.05},
+
+        {"periodicity": None, "max_anomalies": 10, "alpha": 0.01},
+        {"periodicity": None, "max_anomalies": 10, "alpha": 0.1},
+    ]),
+    ("shesd", "gold_price", [
+        {"periodicity": None, "max_anomalies": 10, "alpha": 0.05},
+        {
+            "periodicity": int(0.1 * len(DATASETS["gold_price"][0])),
+            "max_anomalies": 10,
+            "alpha": 0.05
+        },
+        {
+            "periodicity": int(0.5 * len(DATASETS["gold_price"][0])),
+            "max_anomalies": 10,
+            "alpha": 0.05
+        },
+
+        {"periodicity": None, "max_anomalies": 100, "alpha": 0.05},
+        {"periodicity": None, "max_anomalies": 5, "alpha": 0.05},
+
+        {"periodicity": None, "max_anomalies": 10, "alpha": 0.01},
+        {"periodicity": None, "max_anomalies": 10, "alpha": 0.1},
+    ]),
 
     ("ets", "air_passengers", [{}]),
     ("ets", "alcohol_sales", [{}]),
