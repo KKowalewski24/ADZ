@@ -17,7 +17,11 @@ class EtsDetector(Detector):
 
 
     def detect(self, params: Dict[str, Any]) -> None:
-        self.ets_model = ETSModel(self.dataset.squeeze(), **params).fit()
+        series = pd.Series(
+            self.dataset.iloc[:, 1].to_numpy().astype(float),
+            index=self.dataset.iloc[:, 0]
+        )
+        self.ets_model = ETSModel(series, **params).fit()
 
 
     def calculate_statistics(self) -> Dict[str, float]:
@@ -35,5 +39,8 @@ class EtsDetector(Detector):
         plt.plot(self.dataset, label="Original data")
         plt.plot(self.ets_model.fittedvalues, label="Predicted")
         plt.legend()
-        self._set_descriptions(self.configuration_name + self._statistics_to_string(), "", "")
+        self._set_descriptions(
+            self.configuration_name + self._statistics_to_string(),
+            self.dataset.columns[0], self.dataset.columns[1]
+        )
         self._show_and_save(self.configuration_name, results_dir, save_data)
