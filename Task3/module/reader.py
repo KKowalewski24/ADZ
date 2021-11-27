@@ -42,21 +42,7 @@ def read_alcohol_sales() -> Tuple[pd.DataFrame, np.ndarray]:
 def read_gold_price() -> Tuple[pd.DataFrame, np.ndarray]:
     path = f"{DATASET_DIR}gold_price_data.csv"
     path_preprocessing = _add_suffix(path)
-
-    if not os.path.exists(path_preprocessing):
-        temp_file_path = f"{DATASET_DIR}df_temp.csv"
-        df = pd.read_csv(path)
-        df["date"] = pd.to_datetime(df["date"])
-        df_temp = round(df.groupby([df["date"].dt.year, df["date"].dt.month]).mean(), 2)
-        df_temp.to_csv(temp_file_path)
-        df_temp = pd.read_csv(temp_file_path)
-        os.remove(temp_file_path)
-
-        df_temp["date"] = (
-                df_temp.iloc[:, 0].astype(str) + "-" + df_temp.iloc[:, 1].astype(str)
-        ).apply(pd.to_datetime, format="%Y-%m-%d", errors="coerce")
-        df_temp.drop(df_temp.columns[1], axis=1, inplace=True)
-        df.to_csv(path_preprocessing, index=False)
+    _gold_price_preprocessing(path, path_preprocessing)
 
     # 10% of outliers
     indexes = [
@@ -70,6 +56,23 @@ def read_gold_price() -> Tuple[pd.DataFrame, np.ndarray]:
     return _add_outliers_set_datetime(
         pd.read_csv(path_preprocessing), indexes, values, "date", "price"
     )
+
+
+def _gold_price_preprocessing(path: str, path_preprocessing: str) -> None:
+    if not os.path.exists(path_preprocessing):
+        temp_file_path = f"{DATASET_DIR}df_temp.csv"
+        df = pd.read_csv(path)
+        df["date"] = pd.to_datetime(df["date"])
+        df_temp = round(df.groupby([df["date"].dt.year, df["date"].dt.month]).mean(), 2)
+        df_temp.to_csv(temp_file_path)
+        df_temp = pd.read_csv(temp_file_path)
+        os.remove(temp_file_path)
+
+        df_temp["date"] = (
+                df_temp.iloc[:, 0].astype(str) + "-" + df_temp.iloc[:, 1].astype(str)
+        ).apply(pd.to_datetime, format="%Y-%m-%d", errors="coerce")
+        df_temp.drop(df_temp.columns[1], axis=1, inplace=True)
+        df_temp.to_csv(path_preprocessing, index=False)
 
 
 def _add_outliers_set_datetime(
