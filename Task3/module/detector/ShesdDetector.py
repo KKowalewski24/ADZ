@@ -43,5 +43,8 @@ class ShesdDetector(Detector):
             plt.axvline(self.dataset.iloc[index, 0], alpha=1.0, color="orange", linewidth=2)
 
         plt.plot(self.dataset.iloc[:, 0], self.dataset.iloc[:, 1], "g")
-        self._set_descriptions(self.configuration_name + self._statistics_to_string(), "", "")
+        self._set_descriptions(
+            self.configuration_name + self._statistics_to_string(),
+            self.dataset.columns[0], self.dataset.columns[1]
+        )
         self._show_and_save(self.configuration_name, results_dir, save_data)
