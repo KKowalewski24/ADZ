@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import numpy as np
 import pandas as pd
@@ -15,7 +15,7 @@ class ShesdDetector(Detector):
                  configuration_name: str) -> None:
         super().__init__(dataset, ground_truth_outliers, configuration_name)
         self.outliers_array: np.ndarray = np.ndarray([])
-        self.outlier_indexes: np.ndarray = np.ndarray([])
+        self.outlier_indexes: List = []
 
 
     def detect(self, params: Dict[str, Any]) -> None:
@@ -39,11 +39,9 @@ class ShesdDetector(Detector):
 
     def show_results(self, results_dir: str, save_data: bool) -> None:
         plt.figure(figsize=(10, 6))
+        for index in sorted(self.outlier_indexes):
+            plt.axvline(self.dataset.iloc[index, 0], alpha=1.0, color="orange", linewidth=2)
 
-        # for index in self.outlier_indexes.sort():
-        #     print(index)
-        #     plt.axvline(self.dataset.iloc[index], alpha=1.0, color="red", linewidth=4)
-
-        plt.plot(self.dataset.iloc[:, 0], self.dataset.iloc[:, 1])
+        plt.plot(self.dataset.iloc[:, 0], self.dataset.iloc[:, 1], "g")
         self._set_descriptions(self.configuration_name + self._statistics_to_string(), "", "")
         self._show_and_save(self.configuration_name, results_dir, save_data)
