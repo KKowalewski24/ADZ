@@ -24,9 +24,9 @@ class Detector(ABC):
 
 
     def _fill_outliers_array(self, dataset_size: int, indexes: List[int]) -> np.ndarray:
-        outliers = np.zeros(dataset_size)
-        np.put(outliers, indexes, 1)
-        return outliers
+        outliers_array = np.zeros(dataset_size)
+        np.put(outliers_array, indexes, 1)
+        return outliers_array
 
 
     @abstractmethod

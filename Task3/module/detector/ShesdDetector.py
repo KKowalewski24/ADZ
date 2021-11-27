@@ -14,18 +14,20 @@ class ShesdDetector(Detector):
     def __init__(self, dataset: pd.DataFrame, ground_truth_outliers: np.ndarray,
                  configuration_name: str) -> None:
         super().__init__(dataset, ground_truth_outliers, configuration_name)
-        self.outliers: np.ndarray = np.ndarray([])
+        self.outliers_array: np.ndarray = np.ndarray([])
+        self.outlier_indexes: np.ndarray = np.ndarray([])
 
 
     def detect(self, params: Dict[str, Any]) -> None:
-        outlier_indexes = seasonal_esd(self.dataset.iloc[:, 1], **params)
-        self.outliers = self._fill_outliers_array(len(self.dataset.index), outlier_indexes)
+        self.outlier_indexes = seasonal_esd(self.dataset.iloc[:, 1], **params)
+        self.outliers_array = self._fill_outliers_array(len(self.dataset.index), self.outlier_indexes)
 
 
     def calculate_statistics(self) -> Dict[str, float]:
-        recall = round(recall_score(self.ground_truth_outliers, self.outliers, zero_division=0), 2)
+        recall = round(recall_score(
+            self.ground_truth_outliers, self.outliers_array, zero_division=0), 2)
         precision = round(precision_score(
-            self.ground_truth_outliers, self.outliers, zero_division=0), 2)
+            self.ground_truth_outliers, self.outliers_array, zero_division=0), 2)
 
         self.statistics = {
             "recall": recall,
@@ -38,8 +40,9 @@ class ShesdDetector(Detector):
     def show_results(self, results_dir: str, save_data: bool) -> None:
         plt.figure(figsize=(10, 6))
 
-        # for outlier in self.outliers:
-        #     plt.axvline(outlier, alpha=1.0, color="red", linewidth=4)
+        # for index in self.outlier_indexes.sort():
+        #     print(index)
+        #     plt.axvline(self.dataset.iloc[index], alpha=1.0, color="red", linewidth=4)
 
         plt.plot(self.dataset.iloc[:, 0], self.dataset.iloc[:, 1])
         self._set_descriptions(self.configuration_name + self._statistics_to_string(), "", "")
