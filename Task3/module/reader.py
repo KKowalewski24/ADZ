@@ -15,8 +15,8 @@ def read_air_passengers() -> Tuple[pd.DataFrame, np.ndarray]:
         889870, 67738, 8029, 13743, 460130, 95508
     ]
 
-    return _add_outliers(
-        pd.read_csv(f"{DATASET_DIR}air_passengers.csv"), indexes, values, "passengers"
+    return _add_outliers_set_datetime(
+        pd.read_csv(f"{DATASET_DIR}air_passengers.csv"), indexes, values, "date", "passengers"
     )
 
 
@@ -34,8 +34,8 @@ def read_alcohol_sales() -> Tuple[pd.DataFrame, np.ndarray]:
         25000
     ]
 
-    return _add_outliers(
-        pd.read_csv(f"{DATASET_DIR}alcohol_sales.csv"), indexes, values, "sales_number"
+    return _add_outliers_set_datetime(
+        pd.read_csv(f"{DATASET_DIR}alcohol_sales.csv"), indexes, values, "date", "sales_number"
     )
 
 
@@ -76,18 +76,22 @@ def read_gold_price() -> Tuple[pd.DataFrame, np.ndarray]:
         13817, 13883, 13906, 13961, 13977, 13995, 14080, 14141, 14522, 14707, 14982
     ]
 
-    return _add_outliers(
-        pd.read_csv(f"{DATASET_DIR}gold_price_data.csv"), indexes, values, "price"
+    return _add_outliers_set_datetime(
+        pd.read_csv(f"{DATASET_DIR}gold_price_data.csv"), indexes, values, "date", "price"
     )
 
 
-def _add_outliers(df: pd.DataFrame, indexes: List[int], values: List[Union[int, float]],
-                  column_name: str) -> Tuple[pd.DataFrame, np.ndarray]:
+def _add_outliers_set_datetime(
+        df: pd.DataFrame, indexes: List[int], values: List[Union[int, float]],
+        date_column_name: str, value_column_name: str
+) -> Tuple[pd.DataFrame, np.ndarray]:
     if len(indexes) != len(values):
         raise Exception("Arrays must have equals length!")
 
+    df[date_column_name] = pd.to_datetime(df[date_column_name])
+
     for index, value in zip(indexes, values):
-        df.loc[index, column_name] = value
+        df.loc[index, value_column_name] = value
 
     return df, _get_ground_truth_array(df, indexes)
 
