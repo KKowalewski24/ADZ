@@ -43,7 +43,7 @@ EXPERIMENTS: List[Tuple[str, str, List[Dict[str, Any]]]] = [
             "alpha": 0.05
         },
 
-        {"periodicity": None, "max_anomalies": 100, "alpha": 0.05},
+        {"periodicity": None, "max_anomalies": 30, "alpha": 0.05},
         {"periodicity": None, "max_anomalies": 5, "alpha": 0.05},
 
         {"periodicity": None, "max_anomalies": 10, "alpha": 0.01},
