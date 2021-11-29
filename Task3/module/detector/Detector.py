@@ -43,9 +43,11 @@ class Detector(ABC):
     def show_results(self, results_dir: str, save_data: bool) -> None:
         plt.figure(figsize=(10, 6))
         for index in sorted(self.outlier_indexes):
-            plt.axvline(self.dataset.iloc[index, 0], alpha=1.0, color="orange", linewidth=2)
+            plt.plot(
+                self.dataset.iloc[index, 0], self.dataset.iloc[index, 1], "ro"
+            )
 
-        plt.plot(self.dataset.iloc[:, 0], self.dataset.iloc[:, 1], "g")
+        plt.plot(self.dataset.iloc[:, 0], self.dataset.iloc[:, 1])
         self._set_descriptions(
             self.configuration_name + self._statistics_to_string(),
             self.dataset.columns[0], self.dataset.columns[1]
