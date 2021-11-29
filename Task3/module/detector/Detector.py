@@ -4,6 +4,7 @@ from typing import Any, Dict, List
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
+from sklearn.metrics import precision_score, recall_score
 
 from module.utils import prepare_filename
 
@@ -16,11 +17,40 @@ class Detector(ABC):
         self.ground_truth_outliers = ground_truth_outliers
         self.configuration_name = configuration_name
         self.statistics: Dict[str, float] = {}
+        self.outliers_array: np.ndarray = np.ndarray([])
+        self.outlier_indexes: List = []
 
 
     @abstractmethod
     def detect(self, params: Dict[str, Any]) -> None:
         pass
+
+
+    def calculate_statistics(self) -> Dict[str, float]:
+        recall = round(recall_score(
+            self.ground_truth_outliers, self.outliers_array, zero_division=0), 2)
+        precision = round(precision_score(
+            self.ground_truth_outliers, self.outliers_array, zero_division=0), 2)
+
+        self.statistics = {
+            "recall": recall,
+            "precision": precision
+        }
+
+        return self.statistics
+
+
+    def show_results(self, results_dir: str, save_data: bool) -> None:
+        plt.figure(figsize=(10, 6))
+        for index in sorted(self.outlier_indexes):
+            plt.axvline(self.dataset.iloc[index, 0], alpha=1.0, color="orange", linewidth=2)
+
+        plt.plot(self.dataset.iloc[:, 0], self.dataset.iloc[:, 1], "g")
+        self._set_descriptions(
+            self.configuration_name + self._statistics_to_string(),
+            self.dataset.columns[0], self.dataset.columns[1]
+        )
+        self._show_and_save(self.configuration_name, results_dir, save_data)
 
 
     def _fill_outliers_array(self, dataset_size: int, indexes: List[int]) -> np.ndarray:
@@ -29,18 +59,8 @@ class Detector(ABC):
         return outliers_array
 
 
-    @abstractmethod
-    def calculate_statistics(self) -> Dict[str, float]:
-        pass
-
-
     def _statistics_to_string(self) -> str:
         return " ".join([stat + '=' + str(self.statistics[stat]) for stat in self.statistics])
-
-
-    @abstractmethod
-    def show_results(self, results_dir: str, save_data: bool) -> None:
-        pass
 
 
     def _set_descriptions(self, title: str, x_label: str = "", y_label: str = "") -> None:
