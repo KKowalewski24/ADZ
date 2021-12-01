@@ -29,8 +29,7 @@ def read_http_dataset() -> Tuple[np.ndarray, np.ndarray]:
     X_outliers = _random_samples(X[y == 1], 0.02)
     return (
         np.concatenate([X_normal, X_outliers]),
-        np.concatenate([np.zeros((len(X_normal),)), np.zeros((len(X_outliers),)) - 1]).astype(
-            np.int32)
+        np.concatenate([np.zeros((len(X_normal),)), np.zeros((len(X_outliers),)) - 1]).astype(np.int32)
     )
 
 
