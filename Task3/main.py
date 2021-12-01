@@ -104,7 +104,7 @@ def main() -> None:
                    + " & ".join([str(statistics[stat]) for stat in statistics]))
         print(summary)
         with open("summary.txt", "a") as file:
-            file.write(summary)
+            file.write(summary + "\n")
 
     display_finish()
 
