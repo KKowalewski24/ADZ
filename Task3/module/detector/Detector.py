@@ -48,7 +48,7 @@ class Detector(ABC):
             )
         for index in sorted(np.argwhere(self.ground_truth_outliers).squeeze()):
             plt.plot(
-                self.dataset.iloc[index, 0], self.dataset.iloc[index, 1], "gx",
+                self.dataset.iloc[index, 0], self.dataset.iloc[index, 1], "gx", markersize=12
             )
 
         plt.plot(self.dataset.iloc[:, 0], self.dataset.iloc[:, 1])
