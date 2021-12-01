@@ -9,9 +9,8 @@ DATASET_DIR: str = "data/"
 
 # https://www.kaggle.com/rakannimer/air-passengers
 def read_air_passengers() -> Tuple[pd.DataFrame, np.ndarray]:
-    # 11% of outliers
-    indexes = [6, 33, 36, 51, 60, 121, 122, 123, 124, 135, 136, 137, 138, 139, 140, 141]
-    values = [205, 600, 150, 315, 150, 340, 340, 340, 340, 620, 620, 620, 620, 620, 620, 620]
+    indexes = [6, 33, 36, 51, 60, 121, 135]
+    values = [205, 600, 150, 315, 150, 340, 620]
 
     return _add_outliers_set_datetime(
         pd.read_csv(f"{DATASET_DIR}air_passengers.csv"), indexes, values, "date", "passengers"
@@ -20,13 +19,11 @@ def read_air_passengers() -> Tuple[pd.DataFrame, np.ndarray]:
 
 # https://www.kaggle.com/bulentsiyah/for-simple-exercises-time-series-forecasting?select=Alcohol_Sales.csv
 def read_alcohol_sales() -> Tuple[pd.DataFrame, np.ndarray]:
-    # 6% of outliers
     indexes = [
-        72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 128, 151, 315, 316, 317, 318, 319, 320
+        72, 128, 151, 315
     ]
     values = [
-        5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 2000, 8300, 9000,
-        9000, 9000, 9000, 9000, 9000
+        5000, 2000, 8300, 9000,
     ]
 
     return _add_outliers_set_datetime(
@@ -40,12 +37,11 @@ def read_gold_price() -> Tuple[pd.DataFrame, np.ndarray]:
     path_preprocessing = _add_suffix(path)
     _gold_price_preprocessing(path, path_preprocessing)
 
-    # 4% of outliers
     indexes = [
-        37, 38, 140, 141, 142, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 306, 441
+        37, 140, 306, 441
     ]
     values = [
-        800, 800, 250, 250, 250, 400, 400, 400, 400, 400, 400, 400, 400, 400, 400, 400, 400, 320, 120
+        800, 250, 320, 120
     ]
 
     return _add_outliers_set_datetime(
