@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 from module.detector.Detector import Detector
-from module.detector.EtsDetector import EtsDetector
+from module.detector.ArimaDetector import ArimaDetector
 from module.detector.ShesdDetector import ShesdDetector
 from module.reader import read_air_passengers, read_alcohol_sales, read_gold_price
 from module.utils import create_directory, display_finish, run_main
@@ -20,7 +20,7 @@ RESULTS_DIR = "results/"
 
 DETECTORS: Dict[str, Any] = {
     "shesd": ShesdDetector,
-    "ets": EtsDetector,
+    "arima": ArimaDetector,
 }
 
 DATASETS: Dict[str, Tuple[pd.DataFrame, np.ndarray]] = {
@@ -30,67 +30,80 @@ DATASETS: Dict[str, Tuple[pd.DataFrame, np.ndarray]] = {
 }
 
 EXPERIMENTS: List[Tuple[str, str, List[Dict[str, Any]]]] = [
-    ("shesd", "air_passengers", [
-        {"periodicity": None, "max_anomalies": 10, "alpha": 0.05},
-        {
-            "periodicity": int(0.1 * len(DATASETS["air_passengers"][0])),
-            "max_anomalies": 10,
-            "alpha": 0.05
-        },
-        {
-            "periodicity": int(0.5 * len(DATASETS["air_passengers"][0])),
-            "max_anomalies": 10,
-            "alpha": 0.05
-        },
-
-        {"periodicity": None, "max_anomalies": 30, "alpha": 0.05},
-        {"periodicity": None, "max_anomalies": 5, "alpha": 0.05},
-
-        {"periodicity": None, "max_anomalies": 10, "alpha": 0.01},
-        {"periodicity": None, "max_anomalies": 10, "alpha": 0.1},
-    ]),
-    ("shesd", "alcohol_sales", [
-        {"periodicity": None, "max_anomalies": 10, "alpha": 0.05},
-        {
-            "periodicity": int(0.1 * len(DATASETS["alcohol_sales"][0])),
-            "max_anomalies": 10,
-            "alpha": 0.05
-        },
-        {
-            "periodicity": int(0.5 * len(DATASETS["alcohol_sales"][0])),
-            "max_anomalies": 10,
-            "alpha": 0.05
-        },
-
-        {"periodicity": None, "max_anomalies": 100, "alpha": 0.05},
-        {"periodicity": None, "max_anomalies": 5, "alpha": 0.05},
-
-        {"periodicity": None, "max_anomalies": 10, "alpha": 0.01},
-        {"periodicity": None, "max_anomalies": 10, "alpha": 0.1},
-    ]),
-    ("shesd", "gold_price", [
-        {"periodicity": None, "max_anomalies": 10, "alpha": 0.05},
-        {
-            "periodicity": int(0.1 * len(DATASETS["gold_price"][0])),
-            "max_anomalies": 10,
-            "alpha": 0.05
-        },
-        {
-            "periodicity": int(0.5 * len(DATASETS["gold_price"][0])),
-            "max_anomalies": 10,
-            "alpha": 0.05
-        },
-
-        {"periodicity": None, "max_anomalies": 100, "alpha": 0.05},
-        {"periodicity": None, "max_anomalies": 5, "alpha": 0.05},
-
-        {"periodicity": None, "max_anomalies": 10, "alpha": 0.01},
-        {"periodicity": None, "max_anomalies": 10, "alpha": 0.1},
-    ]),
-
-    ("ets", "air_passengers", [{}]),
-    ("ets", "alcohol_sales", [{}]),
-    ("ets", "gold_price", [{}]),
+    (
+        "shesd",
+        "air_passengers",
+        [
+            {"periodicity": None, "max_anomalies": 10, "alpha": 0.05},
+            {
+                "periodicity": int(0.1 * len(DATASETS["air_passengers"][0])),
+                "max_anomalies": 10,
+                "alpha": 0.05,
+            },
+            {
+                "periodicity": int(0.5 * len(DATASETS["air_passengers"][0])),
+                "max_anomalies": 10,
+                "alpha": 0.05,
+            },
+            {"periodicity": None, "max_anomalies": 30, "alpha": 0.05},
+            {"periodicity": None, "max_anomalies": 5, "alpha": 0.05},
+            {"periodicity": None, "max_anomalies": 10, "alpha": 0.01},
+            {"periodicity": None, "max_anomalies": 10, "alpha": 0.1},
+        ],
+    ),
+    (
+        "shesd",
+        "alcohol_sales",
+        [
+            {"periodicity": None, "max_anomalies": 10, "alpha": 0.05},
+            {
+                "periodicity": int(0.1 * len(DATASETS["alcohol_sales"][0])),
+                "max_anomalies": 10,
+                "alpha": 0.05,
+            },
+            {
+                "periodicity": int(0.5 * len(DATASETS["alcohol_sales"][0])),
+                "max_anomalies": 10,
+                "alpha": 0.05,
+            },
+            {"periodicity": None, "max_anomalies": 100, "alpha": 0.05},
+            {"periodicity": None, "max_anomalies": 5, "alpha": 0.05},
+            {"periodicity": None, "max_anomalies": 10, "alpha": 0.01},
+            {"periodicity": None, "max_anomalies": 10, "alpha": 0.1},
+        ],
+    ),
+    (
+        "shesd",
+        "gold_price",
+        [
+            {"periodicity": None, "max_anomalies": 10, "alpha": 0.05},
+            {
+                "periodicity": int(0.1 * len(DATASETS["gold_price"][0])),
+                "max_anomalies": 10,
+                "alpha": 0.05,
+            },
+            {
+                "periodicity": int(0.5 * len(DATASETS["gold_price"][0])),
+                "max_anomalies": 10,
+                "alpha": 0.05,
+            },
+            {"periodicity": None, "max_anomalies": 100, "alpha": 0.05},
+            {"periodicity": None, "max_anomalies": 5, "alpha": 0.05},
+            {"periodicity": None, "max_anomalies": 10, "alpha": 0.01},
+            {"periodicity": None, "max_anomalies": 10, "alpha": 0.1},
+        ],
+    ),
+    ("arima", "air_passengers", [{}]),
+    ("arima", "alcohol_sales", [{"threshold": 1.0}]),
+    (
+        "arima",
+        "gold_price",
+        [
+            {"threshold": 1.0, "order": (0, 1, 2)},
+            {"threshold": 1.5, "order": (0, 1, 2)},
+            {"threshold": 2.0, "order": (0, 1, 2)},
+        ],
+    ),
 ]
 
 
@@ -105,7 +118,8 @@ def main() -> None:
     params_list = [
         experiment[2]
         for experiment in EXPERIMENTS
-        if experiment[0] == chosen_detector_name and experiment[1] == chosen_dataset_name
+        if experiment[0] == chosen_detector_name
+        and experiment[1] == chosen_dataset_name
     ][0]
 
     for params in params_list:
