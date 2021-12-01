@@ -1,10 +1,7 @@
-import numpy as np
 import matplotlib.pyplot as plt
-from module.reader import read_air_passengers, read_gold_price, read_alcohol_sales
-from statsmodels.tsa.arima.model import ARIMA
-from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
-
 from pmdarima import auto_arima
+
+from module.reader import read_air_passengers, read_alcohol_sales, read_gold_price
 
 # read datasets
 passengers, passengers_outliers = read_air_passengers()

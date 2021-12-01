@@ -4,8 +4,8 @@ from typing import Any, Dict, List, Tuple
 import numpy as np
 import pandas as pd
 
-from module.detector.Detector import Detector
 from module.detector.ArimaDetector import ArimaDetector
+from module.detector.Detector import Detector
 from module.detector.ShesdDetector import ShesdDetector
 from module.reader import read_air_passengers, read_alcohol_sales, read_gold_price
 from module.utils import create_directory, display_finish, run_main
@@ -86,8 +86,7 @@ def main() -> None:
     params_list = [
         experiment[2]
         for experiment in EXPERIMENTS
-        if experiment[0] == chosen_detector_name
-        and experiment[1] == chosen_dataset_name
+        if experiment[0] == chosen_detector_name and experiment[1] == chosen_dataset_name
     ][0]
 
     for params in params_list:
