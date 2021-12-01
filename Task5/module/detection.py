@@ -1,2 +1,0 @@
-def detect() -> None:
-    pass
