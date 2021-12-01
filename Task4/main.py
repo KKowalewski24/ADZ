@@ -1,10 +1,11 @@
 from argparse import ArgumentParser, Namespace
-from typing import Dict, Tuple, List, Any
+from typing import Any, Dict, List, Tuple
 
 import numpy as np
 
-from module.detector.FastAbodDetector import FastAbodDetector
+from module.detector.BlockNestedLoopDetector import BlockNestedLoopDetector
 from module.detector.Detector import Detector
+from module.detector.FastAbodDetector import FastAbodDetector
 from module.reader import read_http_dataset, read_mammography_dataset, read_synthetic_dataset
 from module.utils import create_directory, display_finish, run_main
 
@@ -16,6 +17,7 @@ from module.utils import create_directory, display_finish, run_main
 # VAR ------------------------------------------------------------------------ #
 DETECTORS: Dict[str, Any] = {
     "fast_abod": FastAbodDetector,
+    "bnl": BlockNestedLoopDetector,
 }
 
 DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]] = {
@@ -43,6 +45,10 @@ EXPERIMENTS: List[Tuple[str, str, List[Dict[str, Any]]]] = [
         {"contamination": 0.5, "n_neighbors": 5},
         {"contamination": 0.05, "n_neighbors": 5},
     ]),
+
+    ("bnl", "http", [{}]),
+    ("bnl", "mammography", [{}]),
+    ("bnl", "synthetic", [{}]),
 ]
 
 
