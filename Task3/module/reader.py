@@ -9,8 +9,8 @@ DATASET_DIR: str = "data/"
 
 # https://www.kaggle.com/rakannimer/air-passengers
 def read_air_passengers() -> Tuple[pd.DataFrame, np.ndarray]:
-    indexes = [6, 33, 36, 51, 60, 121, 135]
-    values = [205, 600, 150, 315, 150, 340, 620]
+    indexes = [6, 33, 36, 51, 60, 100, 135]
+    values = [205, 600, 150, 315, 150, 190, 620]
 
     return _add_outliers_set_datetime(
         pd.read_csv(f"{DATASET_DIR}air_passengers.csv"), indexes, values, "date", "passengers"
@@ -20,10 +20,10 @@ def read_air_passengers() -> Tuple[pd.DataFrame, np.ndarray]:
 # https://www.kaggle.com/bulentsiyah/for-simple-exercises-time-series-forecasting?select=Alcohol_Sales.csv
 def read_alcohol_sales() -> Tuple[pd.DataFrame, np.ndarray]:
     indexes = [
-        72, 128, 151, 315
+        72, 128, 151, 208, 253, 315
     ]
     values = [
-        5000, 2000, 8300, 9000,
+        3000, 2000, 10000, 8300, 12180, 9000,
     ]
 
     return _add_outliers_set_datetime(
@@ -38,10 +38,10 @@ def read_gold_price() -> Tuple[pd.DataFrame, np.ndarray]:
     _gold_price_preprocessing(path, path_preprocessing)
 
     indexes = [
-        37, 140, 306, 441
+        37, 140, 220, 306, 404, 441
     ]
     values = [
-        800, 250, 320, 120
+        800, 250, 150, 500, 1350, 120
     ]
 
     return _add_outliers_set_datetime(
