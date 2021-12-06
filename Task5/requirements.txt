@@ -1,3 +1,4 @@
+scikit-learn
 scipy
 h5py
 numpy

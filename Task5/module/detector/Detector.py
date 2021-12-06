@@ -9,7 +9,7 @@ class Detector(ABC):
 
 
     def __init__(self, dataset: Tuple[np.ndarray, np.ndarray], configuration_name: str) -> None:
-        self.dataset = dataset
+        self.X, self.y = dataset
         self.configuration_name = configuration_name
 
 
