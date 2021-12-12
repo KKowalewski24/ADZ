@@ -2,8 +2,11 @@ from typing import Any, Dict, Tuple
 
 import numpy as np
 from pyod.models.abod import ABOD
+from pyod.utils import precision_n_scores
 from pyod.utils.example import visualize
 from sklearn.decomposition import PCA
+from sklearn.metrics import roc_auc_score
+from sklearn.utils import check_consistent_length, column_or_1d
 
 from module.detector.Detector import Detector
 from module.utils import prepare_filename
@@ -30,6 +33,26 @@ class FastAbodDetector(Detector):
 
         self.y_test_pred = abod.predict(self.X_test)
         self.y_test_scores = abod.decision_function(self.X_test)
+
+
+    def calculate_statistics(self) -> Dict[str, float]:
+        roc, precision = self._evaluate_outlier_detection(self.y_test, self.y_test_scores)
+        self.statistics = {
+            "roc": roc,
+            "precision": precision
+        }
+
+        return self.statistics
+
+
+    def _evaluate_outlier_detection(self, y, y_pred) -> Tuple[float, float]:
+        y = column_or_1d(y)
+        y_pred = column_or_1d(y_pred)
+        check_consistent_length(y, y_pred)
+        return (
+            np.round(roc_auc_score(y, y_pred), decimals=4),
+            np.round(precision_n_scores(y, y_pred), decimals=4)
+        )
 
 
     def show_results(self, save_results: bool) -> None:

@@ -12,10 +12,16 @@ class Detector(ABC):
                  configuration_name: str) -> None:
         self.X_train, self.X_test, self.y_train, self.y_test = dataset
         self.configuration_name = configuration_name
+        self.statistics: Dict[str, float] = {}
 
 
     @abstractmethod
     def detect(self, params: Dict[str, Any]) -> None:
+        pass
+
+
+    @abstractmethod
+    def calculate_statistics(self) -> Dict[str, float]:
         pass
 
 

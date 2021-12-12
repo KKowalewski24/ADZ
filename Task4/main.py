@@ -73,7 +73,14 @@ def main() -> None:
         )
         detector = DETECTORS[chosen_detector_name](dataset, configuration_name)
         detector.detect(params)
+        statistics = detector.calculate_statistics()
         detector.show_results(save_results)
+
+        summary = (f"{chosen_detector_name} & {chosen_dataset_name} & "
+                   + " & ".join([str(statistics[stat]) for stat in statistics]))
+        print(summary)
+        with open("summary.txt", "a") as file:
+            file.write(summary + "\n")
 
     display_finish()
 
