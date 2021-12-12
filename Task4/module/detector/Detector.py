@@ -28,3 +28,10 @@ class Detector(ABC):
     @abstractmethod
     def show_results(self, save_results: bool) -> None:
         pass
+
+
+    def _statistics_to_string(self) -> str:
+        return "_".join([
+            stat + '=' + str(self.statistics[stat]).replace('.', ',')
+            for stat in self.statistics
+        ])
