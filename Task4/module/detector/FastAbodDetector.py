@@ -4,13 +4,12 @@ import numpy as np
 from pyod.models.abod import ABOD
 from pyod.utils import precision_n_scores
 from pyod.utils.example import visualize
-from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
 from sklearn.metrics import roc_auc_score
 from sklearn.utils import check_consistent_length, column_or_1d
 
 from module.detector.Detector import Detector
 from module.utils import prepare_filename
-from sklearn.manifold import TSNE
 
 
 class FastAbodDetector(Detector):
@@ -57,14 +56,14 @@ class FastAbodDetector(Detector):
 
 
     def show_results(self, save_results: bool) -> None:
-        pca = PCA(n_components=2)
+        tsne = TSNE(n_components=2)
         filename = prepare_filename(
             Detector.RESULTS_DIR + self.configuration_name + self._statistics_to_string()
         )
         visualize(
             filename,
-            pca.fit_transform(self.X_train), self.y_train,
-            pca.fit_transform(self.X_test), self.y_test,
+            tsne.fit_transform(self.X_train), self.y_train,
+            tsne.fit_transform(self.X_test), self.y_test,
             self.y_train_pred, self.y_test_pred,
             show_figure=not save_results, save_figure=save_results
         )
