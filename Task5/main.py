@@ -4,32 +4,26 @@ from typing import Any, Dict, List, Tuple
 import numpy as np
 
 from module.detector.Detector import Detector
-from module.detector.FuzzyKMeansDetector import FuzzyKMeansDetector
-from module.reader import read_http_dataset, read_mammography_dataset, read_synthetic_dataset
+from module.reader import read_synthetic_dataset
 from module.utils import create_directory, display_finish, run_main
 
 """
     How to run: 
-        python main.py -s -d fuzzy_kmeans -ds synthetic
+        python main.py -s -d kmeans -ds synthetic
 """
 
 # VAR ------------------------------------------------------------------------ #
 
 DETECTORS: Dict[str, Any] = {
-    "fuzzy_kmeans": FuzzyKMeansDetector
+    "kmeans": 0
 }
 
 DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray]] = {
-    "http": read_http_dataset(),
-    "mammography": read_mammography_dataset(),
     "synthetic": read_synthetic_dataset(),
 }
 
 EXPERIMENTS: List[Tuple[str, str, List[Dict[str, Any]]]] = [
-    ("fuzzy_kmeans", "http", [{}]),
-    ("fuzzy_kmeans", "mammography", [{}]),
-    ("fuzzy_kmeans", "synthetic", [{}]),
-
+    ("kmeans", "synthetic", [{}]),
 ]
 
 
@@ -55,7 +49,14 @@ def main() -> None:
         )
         detector = DETECTORS[chosen_detector_name](dataset, configuration_name)
         detector.detect(params)
+        statistics = detector.calculate_statistics()
         detector.show_results(save_results)
+
+        summary = (f"{chosen_detector_name} & {chosen_dataset_name} & "
+                   + " & ".join([str(statistics[stat]) for stat in statistics]))
+        print(summary)
+        with open("summary.txt", "a") as file:
+            file.write(summary + "\n")
 
     display_finish()
 

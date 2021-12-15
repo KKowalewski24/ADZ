@@ -11,6 +11,7 @@ class Detector(ABC):
     def __init__(self, dataset: Tuple[np.ndarray, np.ndarray], configuration_name: str) -> None:
         self.X, self.y = dataset
         self.configuration_name = configuration_name
+        self.statistics: Dict[str, float] = {}
 
 
     @abstractmethod
@@ -19,5 +20,17 @@ class Detector(ABC):
 
 
     @abstractmethod
+    def calculate_statistics(self) -> Dict[str, float]:
+        pass
+
+
+    @abstractmethod
     def show_results(self, save_results: bool) -> None:
         pass
+
+
+    def _statistics_to_string(self) -> str:
+        return "_".join([
+            stat + '=' + str(self.statistics[stat]).replace('.', ',')
+            for stat in self.statistics
+        ])

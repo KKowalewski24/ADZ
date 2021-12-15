@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python main.py -s -d fuzzy_kmeans -ds synthetic
+python main.py -s -d kmeans -ds synthetic
