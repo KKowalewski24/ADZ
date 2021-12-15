@@ -3,7 +3,9 @@ from typing import Any, Dict, List, Tuple
 
 import numpy as np
 
+from module.detector.DbScanDetector import DbScanDetector
 from module.detector.Detector import Detector
+from module.detector.KMeansDetector import KMeansDetector
 from module.reader import read_synthetic_dataset
 from module.utils import create_directory, display_finish, run_main
 
@@ -15,7 +17,8 @@ from module.utils import create_directory, display_finish, run_main
 # VAR ------------------------------------------------------------------------ #
 
 DETECTORS: Dict[str, Any] = {
-    "kmeans": 0
+    "kmeans": KMeansDetector,
+    "db_scan": DbScanDetector
 }
 
 DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray]] = {
@@ -23,7 +26,13 @@ DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray]] = {
 }
 
 EXPERIMENTS: List[Tuple[str, str, List[Dict[str, Any]]]] = [
-    ("kmeans", "synthetic", [{}]),
+    ("kmeans", "synthetic", [
+        {"n_clusters": 8}
+    ]),
+
+    ("db_scan", "synthetic", [
+        {"eps": 0.5}
+    ]),
 ]
 
 
