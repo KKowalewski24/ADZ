@@ -10,7 +10,7 @@ from pyod.utils.data import generate_data
 from scipy.io import loadmat
 from sklearn.metrics import precision_recall_curve
 
-DATASET_DIR: str = "../data/"
+DATASET_DIR: str = "data/"
 RANDOM_STATE_VALUE = 21
 
 
