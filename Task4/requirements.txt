@@ -1,0 +1,10 @@
+matplotlib
+h5py
+scipy
+scikit-learn
+pyod
+numpy
+pandas
+flake8
+pep8-naming
+mypy
