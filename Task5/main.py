@@ -27,15 +27,24 @@ DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray]] = {
 
 EXPERIMENTS: List[Tuple[str, str, List[Dict[str, Any]]]] = [
     ("cmeans", "synthetic", [
-        {}
+        {
+            "outlier_fraction_threshold": 0.1,
+            "n_clusters": 2
+        }
     ]),
 
     ("cmeans", "mammography", [
-        {}
+        {
+            "outlier_fraction_threshold": 0.1,
+            "n_clusters": 2
+        }
     ]),
 
     ("cmeans", "http", [
-        {}
+        {
+            "outlier_fraction_threshold": 0.1,
+            "n_clusters": 2
+        }
     ])
 ]
 

@@ -3,6 +3,7 @@ from typing import Any, Dict, Tuple
 
 import numpy as np
 from matplotlib import pyplot as plt
+from sklearn.metrics import recall_score, precision_score
 
 from module.utils import prepare_filename
 
@@ -13,6 +14,7 @@ class Detector(ABC):
 
     def __init__(self, dataset: Tuple[np.ndarray, np.ndarray], configuration_name: str) -> None:
         self.X, self.y = dataset
+        self.y_pred: np.ndarray = np.ndarray([])
         self.configuration_name = configuration_name
         self.statistics: Dict[str, float] = {}
 
@@ -23,8 +25,8 @@ class Detector(ABC):
 
 
     def calculate_statistics(self) -> Dict[str, float]:
-        recall = 0
-        precision = 0
+        recall = np.round(recall_score(self.y, self.y_pred, average=None, zero_division=0), 2)
+        precision = np.round(precision_score(self.y, self.y_pred, average=None, zero_division=0), 2)
 
         self.statistics = {
             "recall": recall,
