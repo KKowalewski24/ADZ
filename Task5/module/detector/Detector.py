@@ -3,13 +3,14 @@ from typing import Any, Dict, Tuple
 
 import numpy as np
 from matplotlib import pyplot as plt
-from sklearn.metrics import recall_score, precision_score
+from sklearn.metrics import precision_score, recall_score
 
 from module.utils import prepare_filename
 
 
 class Detector(ABC):
     RESULTS_DIR = "results/"
+    RANDOM_STATE_VALUE = 21
 
 
     def __init__(self, dataset: Tuple[np.ndarray, np.ndarray], configuration_name: str) -> None:
