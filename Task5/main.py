@@ -5,6 +5,7 @@ import numpy as np
 
 from module.detector.Detector import Detector
 from module.detector.FuzzyCMeansDetector import FuzzyCMeansDetector
+from module.detector.KMeansDetector import KMeansDetector
 from module.reader import read_http_dataset, read_mammography_dataset, read_synthetic_dataset
 from module.utils import create_directory, display_finish, run_main
 
@@ -17,6 +18,7 @@ from module.utils import create_directory, display_finish, run_main
 
 DETECTORS: Dict[str, Any] = {
     "cmeans": FuzzyCMeansDetector,
+    "kmeans": KMeansDetector
 }
 
 DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray]] = {
@@ -32,6 +34,12 @@ EXPERIMENTS: List[Tuple[str, str, List[Dict[str, Any]]]] = [
             "n_clusters": 2
         }
     ]),
+    ("kmeans", "synthetic", [
+        {
+            "outlier_fraction_threshold": 0.1,
+            "n_clusters": 2
+        }
+    ]),
 
     ("cmeans", "mammography", [
         {
@@ -39,8 +47,20 @@ EXPERIMENTS: List[Tuple[str, str, List[Dict[str, Any]]]] = [
             "n_clusters": 2
         }
     ]),
+    ("kmeans", "mammography", [
+        {
+            "outlier_fraction_threshold": 0.1,
+            "n_clusters": 2
+        }
+    ]),
 
     ("cmeans", "http", [
+        {
+            "outlier_fraction_threshold": 0.1,
+            "n_clusters": 2
+        }
+    ]),
+    ("kmeans", "http", [
         {
             "outlier_fraction_threshold": 0.1,
             "n_clusters": 2

@@ -25,9 +25,20 @@ class Detector(ABC):
         pass
 
 
-    def calculate_statistics(self) -> Dict[str, float]:
-        recall = np.round(recall_score(self.y, self.y_pred, average=None, zero_division=0), 2)
-        precision = np.round(precision_score(self.y, self.y_pred, average=None, zero_division=0), 2)
+    def _mark_outliers(self, outlier_fraction_threshold: float) -> None:
+        for label in np.unique(self.y_pred):
+            quantity = np.count_nonzero(self.y_pred == label)
+            if quantity < outlier_fraction_threshold * len(self.X):
+                self.y_pred[self.y_pred == label] = -1
+
+
+    def calculate_statistics(self) -> Dict[str, Any]:
+        recall = list(
+            np.round(recall_score(self.y, self.y_pred, average=None, zero_division=0), 2)
+        )
+        precision = list(
+            np.round(precision_score(self.y, self.y_pred, average=None, zero_division=0), 2)
+        )
 
         self.statistics = {
             "recall": recall,
