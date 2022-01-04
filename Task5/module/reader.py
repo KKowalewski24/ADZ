@@ -10,7 +10,7 @@ RANDOM_STATE_VALUE = 21
 
 
 def read_synthetic_dataset() -> Tuple[np.ndarray, np.ndarray]:
-    return generate_data(
+    X, y = generate_data(
         n_train=200,
         n_features=2,
         contamination=0.1,
@@ -18,12 +18,15 @@ def read_synthetic_dataset() -> Tuple[np.ndarray, np.ndarray]:
         random_state=RANDOM_STATE_VALUE,
         behaviour="new",
     )
+    y[y == 1] = -1
+    return X, y
 
 
 def read_mammography_dataset() -> Tuple[np.ndarray, np.ndarray]:
     file = loadmat(f"{DATASET_DIR}mammography.mat")
     X = file["X"]
     y = file["y"].squeeze().astype(np.int32)
+    y[y == 1] = -1
     return X, y
 
 
@@ -36,12 +39,10 @@ def read_http_dataset() -> Tuple[np.ndarray, np.ndarray]:
     X_normal = _random_samples(X[y == 0], 0.01)
     X_outliers = _random_samples(X[y == 1], 0.02)
 
-    X = np.concatenate([X_normal, X_outliers])
-    y = np.concatenate(
-        [np.zeros((len(X_normal),)), np.zeros((len(X_outliers),)) + 1]
-    ).astype(np.int32)
-
-    return X, y
+    return (
+        np.concatenate([X_normal, X_outliers]),
+        np.concatenate([np.zeros((len(X_normal),)), np.zeros((len(X_outliers),)) - 1]).astype(np.int32)
+    )
 
 
 def _random_samples(X, fraction):
