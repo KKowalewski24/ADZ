@@ -3,36 +3,40 @@ from typing import Any, Dict, List, Tuple
 
 import numpy as np
 
-from module.detector.DbScanDetector import DbScanDetector
 from module.detector.Detector import Detector
-from module.detector.KMeansDetector import KMeansDetector
-from module.reader import read_synthetic_dataset
+from module.detector.FuzzyCMeansDetector import FuzzyCMeansDetector
+from module.reader import read_http_dataset, read_mammography_dataset, read_synthetic_dataset
 from module.utils import create_directory, display_finish, run_main
 
 """
     How to run: 
-        python main.py -s -d kmeans -ds synthetic
+        python main.py -s -d cmeans -ds synthetic
 """
 
 # VAR ------------------------------------------------------------------------ #
 
 DETECTORS: Dict[str, Any] = {
-    "kmeans": KMeansDetector,
-    "db_scan": DbScanDetector
+    "cmeans": FuzzyCMeansDetector,
 }
 
 DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray]] = {
     "synthetic": read_synthetic_dataset(),
+    "mammography": read_mammography_dataset(),
+    "http": read_http_dataset(),
 }
 
 EXPERIMENTS: List[Tuple[str, str, List[Dict[str, Any]]]] = [
-    ("kmeans", "synthetic", [
-        {"n_clusters": 8}
+    ("cmeans", "synthetic", [
+        {}
     ]),
 
-    ("db_scan", "synthetic", [
-        {"eps": 0.5}
+    ("cmeans", "mammography", [
+        {}
     ]),
+
+    ("cmeans", "http", [
+        {}
+    ])
 ]
 
 
