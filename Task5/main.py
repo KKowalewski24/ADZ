@@ -112,6 +112,30 @@ HTTP_SETUP: List[Dict[str, Any]] = [
         "outlier_fraction_threshold": 0.2,
     },
     {
+        "n_clusters": 8,
+        "outlier_fraction_threshold": 0.005,
+    },
+    {
+        "n_clusters": 8,
+        "outlier_fraction_threshold": 0.01,
+    },
+    {
+        "n_clusters": 8,
+        "outlier_fraction_threshold": 0.05,
+    },
+    {
+        "n_clusters": 10,
+        "outlier_fraction_threshold": 0.005,
+    },
+    {
+        "n_clusters": 10,
+        "outlier_fraction_threshold": 0.01,
+    },
+    {
+        "n_clusters": 10,
+        "outlier_fraction_threshold": 0.05,
+    },
+    {
         "n_clusters": 10,
         "outlier_fraction_threshold": 0.1,
     },
