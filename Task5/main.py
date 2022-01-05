@@ -30,6 +30,10 @@ DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray]] = {
 SYNTHETIC_SETUP: List[Dict[str, Any]] = [
     {
         "n_clusters": 2,
+        "outlier_fraction_threshold": 0.01,
+    },
+    {
+        "n_clusters": 2,
         "outlier_fraction_threshold": 0.1,
     },
     {
@@ -38,6 +42,10 @@ SYNTHETIC_SETUP: List[Dict[str, Any]] = [
     },
     {
         "n_clusters": 5,
+        "outlier_fraction_threshold": 0.01,
+    },
+    {
+        "n_clusters": 5,
         "outlier_fraction_threshold": 0.1,
     },
     {
@@ -46,10 +54,38 @@ SYNTHETIC_SETUP: List[Dict[str, Any]] = [
     },
     {
         "n_clusters": 10,
+        "outlier_fraction_threshold": 0.01,
+    },
+    {
+        "n_clusters": 10,
         "outlier_fraction_threshold": 0.1,
     },
     {
         "n_clusters": 10,
+        "outlier_fraction_threshold": 0.2,
+    },
+    {
+        "n_clusters": 15,
+        "outlier_fraction_threshold": 0.01,
+    },
+    {
+        "n_clusters": 15,
+        "outlier_fraction_threshold": 0.1,
+    },
+    {
+        "n_clusters": 15,
+        "outlier_fraction_threshold": 0.2,
+    },
+    {
+        "n_clusters": 20,
+        "outlier_fraction_threshold": 0.01,
+    },
+    {
+        "n_clusters": 20,
+        "outlier_fraction_threshold": 0.1,
+    },
+    {
+        "n_clusters": 20,
         "outlier_fraction_threshold": 0.2,
     },
 ]
