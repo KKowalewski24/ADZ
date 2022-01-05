@@ -37,6 +37,7 @@ class Detector(ABC):
         recall = recall_score(self.y, self.y_pred, average=None, zero_division=0)
         precision = precision_score(self.y, self.y_pred, average=None, zero_division=0)
 
+        # [0] is taken because stats are calculated for (-1) class
         self.statistics = {
             "recall": np.round(recall[0], 2),
             "precision": np.round(precision[0], 2)

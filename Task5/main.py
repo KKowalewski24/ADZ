@@ -2,7 +2,6 @@ from argparse import ArgumentParser, Namespace
 from typing import Any, Dict, List, Tuple
 
 import numpy as np
-from tqdm import tqdm
 
 from module.detector.Detector import Detector
 from module.detector.FuzzyCMeansDetector import FuzzyCMeansDetector
@@ -28,45 +27,64 @@ DATASETS: Dict[str, Tuple[np.ndarray, np.ndarray]] = {
     "http": read_http_dataset(),
 }
 
+SYNTHETIC_SETUP: List[Dict[str, Any]] = [
+    {
+        "n_clusters": 2,
+        "outlier_fraction_threshold": 0.1,
+    },
+    {
+        "n_clusters": 2,
+        "outlier_fraction_threshold": 0.2,
+    },
+    {
+        "n_clusters": 5,
+        "outlier_fraction_threshold": 0.1,
+    },
+    {
+        "n_clusters": 5,
+        "outlier_fraction_threshold": 0.2,
+    },
+    {
+        "n_clusters": 10,
+        "outlier_fraction_threshold": 0.1,
+    },
+    {
+        "n_clusters": 10,
+        "outlier_fraction_threshold": 0.2,
+    },
+]
+
+MAMMOGRAPHY_SETUP: List[Dict[str, Any]] = [
+    {
+        "n_clusters": 50,
+        "outlier_fraction_threshold": 0.005,
+    }
+]
+
+HTTP_SETUP: List[Dict[str, Any]] = [
+    {
+        "n_clusters": 20,
+        "outlier_fraction_threshold": 0.01,
+    },
+    {
+        "n_clusters": 20,
+        "outlier_fraction_threshold": 0.001,
+    },
+    {
+        "n_clusters": 20,
+        "outlier_fraction_threshold": 0.005,
+    },
+]
+
 EXPERIMENTS: List[Tuple[str, str, List[Dict[str, Any]]]] = [
-    ("cmeans", "synthetic", [
-        {
-            "outlier_fraction_threshold": 0.1,
-            "n_clusters": 2
-        }
-    ]),
-    ("kmeans", "synthetic", [
-        {
-            "outlier_fraction_threshold": 0.1,
-            "n_clusters": 2
-        }
-    ]),
+    ("cmeans", "synthetic", SYNTHETIC_SETUP),
+    ("kmeans", "synthetic", SYNTHETIC_SETUP),
 
-    ("cmeans", "mammography", [
-        {
-            "outlier_fraction_threshold": 0.1,
-            "n_clusters": 2
-        }
-    ]),
-    ("kmeans", "mammography", [
-        {
-            "outlier_fraction_threshold": 0.1,
-            "n_clusters": 2
-        }
-    ]),
+    ("cmeans", "mammography", MAMMOGRAPHY_SETUP),
+    ("kmeans", "mammography", MAMMOGRAPHY_SETUP),
 
-    ("cmeans", "http", [
-        {
-            "outlier_fraction_threshold": 0.1,
-            "n_clusters": 2
-        }
-    ]),
-    ("kmeans", "http", [
-        {
-            "outlier_fraction_threshold": 0.1,
-            "n_clusters": 2
-        }
-    ])
+    ("cmeans", "http", HTTP_SETUP),
+    ("kmeans", "http", HTTP_SETUP)
 ]
 
 
@@ -85,7 +103,7 @@ def main() -> None:
     ][0]
 
     dataset = DATASETS[chosen_dataset_name]
-    for params in tqdm(params_list):
+    for params in params_list:
         configuration_name = (
             f"{chosen_dataset_name}_{chosen_detector_name}_"
             f"{'_'.join([param + '=' + str(params[param]).replace('.', ',') for param in params])}"
@@ -95,8 +113,11 @@ def main() -> None:
         statistics = detector.calculate_statistics()
         detector.show_results(save_results)
 
-        summary = (f"{chosen_detector_name} & {chosen_dataset_name} & "
-                   + " & ".join([str(statistics[stat]) for stat in statistics]))
+        summary = (
+                f"{chosen_detector_name} & {chosen_dataset_name} & "
+                + " & ".join([str(params[param]) for param in params]) + " & "
+                + " & ".join([str(statistics[stat]) for stat in statistics])
+        )
         print(summary)
         with open("summary.txt", "a") as file:
             file.write(summary + "\n")
