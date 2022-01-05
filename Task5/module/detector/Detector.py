@@ -3,6 +3,7 @@ from typing import Any, Dict, Tuple
 
 import numpy as np
 from matplotlib import pyplot as plt
+from sklearn.manifold import TSNE
 from sklearn.metrics import precision_score, recall_score
 
 from module.utils import prepare_filename
@@ -32,24 +33,28 @@ class Detector(ABC):
                 self.y_pred[self.y_pred == label] = -1
 
 
-    def calculate_statistics(self) -> Dict[str, Any]:
-        recall = list(
-            np.round(recall_score(self.y, self.y_pred, average=None, zero_division=0), 2)
-        )
-        precision = list(
-            np.round(precision_score(self.y, self.y_pred, average=None, zero_division=0), 2)
-        )
+    def calculate_statistics(self) -> Dict[str, float]:
+        recall = recall_score(self.y, self.y_pred, average=None, zero_division=0)
+        precision = precision_score(self.y, self.y_pred, average=None, zero_division=0)
 
         self.statistics = {
-            "recall": recall,
-            "precision": precision
+            "recall": np.round(recall[0], 2),
+            "precision": np.round(precision[0], 2)
         }
 
         return self.statistics
 
 
-    def show_results(self, save_results: bool) -> None:
+    def show_results(self, save_results: bool, size: int = 20) -> None:
+        # Reduce dimensionality only when there more than 2 dimensions
+        if self.X[0].size > 2:
+            self.X = TSNE().fit_transform(self.X)
+
         plt.figure(figsize=(10, 6))
+        plt.scatter(self.X[self.y_pred == -1, 0], self.X[self.y_pred == -1, 1], c="k", s=size)
+        # All labels except (-1)
+        for label in set(np.unique(self.y_pred)) - {-1}:
+            plt.scatter(self.X[self.y_pred == label, 0], self.X[self.y_pred == label, 1], s=size)
 
         self._set_descriptions(self.configuration_name + self._statistics_to_string())
         self._show_and_save(self.configuration_name, Detector.RESULTS_DIR, save_results)
