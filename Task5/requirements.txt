@@ -1,3 +1,4 @@
+tqdm
 pyod
 matplotlib
 scikit-learn

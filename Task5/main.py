@@ -2,6 +2,7 @@ from argparse import ArgumentParser, Namespace
 from typing import Any, Dict, List, Tuple
 
 import numpy as np
+from tqdm import tqdm
 
 from module.detector.Detector import Detector
 from module.detector.FuzzyCMeansDetector import FuzzyCMeansDetector
@@ -84,7 +85,7 @@ def main() -> None:
     ][0]
 
     dataset = DATASETS[chosen_dataset_name]
-    for params in params_list:
+    for params in tqdm(params_list):
         configuration_name = (
             f"{chosen_dataset_name}_{chosen_detector_name}_"
             f"{'_'.join([param + '=' + str(params[param]).replace('.', ',') for param in params])}"
