@@ -2,7 +2,7 @@ import os
 import subprocess
 import sys
 from datetime import datetime
-from typing import Callable
+from typing import Any, Callable
 
 
 def create_directory(path: str) -> None:
@@ -15,7 +15,7 @@ def prepare_filename(name: str, extension: str = "", add_date: bool = True) -> s
             + extension).replace(" ", "")
 
 
-def run_main(main: Callable[[], None]) -> None:
+def run_main(main: Callable[[], None]) -> Any:
     if check_if_exists_in_args("-t"):
         check_types_check_style()
     elif check_if_exists_in_args("-b"):

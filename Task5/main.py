@@ -1,4 +1,5 @@
 from argparse import ArgumentParser, Namespace
+from concurrent.futures.process import ProcessPoolExecutor
 from typing import Any, Dict, List, Tuple
 
 import numpy as np
@@ -92,8 +93,64 @@ SYNTHETIC_SETUP: List[Dict[str, Any]] = [
 
 MAMMOGRAPHY_SETUP: List[Dict[str, Any]] = [
     {
+        "n_clusters": 5,
+        "outlier_fraction_threshold": 0.1,
+    },
+    {
+        "n_clusters": 5,
+        "outlier_fraction_threshold": 0.2,
+    },
+    {
+        "n_clusters": 10,
+        "outlier_fraction_threshold": 0.1,
+    },
+    {
+        "n_clusters": 10,
+        "outlier_fraction_threshold": 0.2,
+    },
+    {
+        "n_clusters": 15,
+        "outlier_fraction_threshold": 0.1,
+    },
+    {
+        "n_clusters": 15,
+        "outlier_fraction_threshold": 0.2,
+    },
+    {
+        "n_clusters": 20,
+        "outlier_fraction_threshold": 0.1,
+    },
+    {
+        "n_clusters": 20,
+        "outlier_fraction_threshold": 0.2,
+    },
+    {
+        "n_clusters": 30,
+        "outlier_fraction_threshold": 0.1,
+    },
+    {
+        "n_clusters": 40,
+        "outlier_fraction_threshold": 0.005,
+    },
+    {
+        "n_clusters": 40,
+        "outlier_fraction_threshold": 0.01,
+    },
+    {
+        "n_clusters": 40,
+        "outlier_fraction_threshold": 0.1,
+    },
+    {
         "n_clusters": 50,
         "outlier_fraction_threshold": 0.005,
+    },
+    {
+        "n_clusters": 50,
+        "outlier_fraction_threshold": 0.01,
+    },
+    {
+        "n_clusters": 50,
+        "outlier_fraction_threshold": 0.1,
     }
 ]
 
@@ -180,4 +237,4 @@ def prepare_args() -> Namespace:
 
 # __MAIN__ ------------------------------------------------------------------- #
 if __name__ == "__main__":
-    run_main(main)
+    ProcessPoolExecutor().map(run_main(main))
