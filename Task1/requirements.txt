@@ -1,0 +1,10 @@
+sklearn
+tqdm
+seaborn
+matplotlib
+pandas
+flake8
+pep8-naming
+mypy
+Cython
+scikit-multiflow
